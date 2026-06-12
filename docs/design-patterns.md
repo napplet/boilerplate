@@ -52,6 +52,28 @@ nip5aManifest({
 Use `config.get()` for a one-time snapshot, `config.subscribe()` for live values,
 and `config.openSettings()` to deep-link into shell-owned settings UI.
 
+## Text Selection
+
+The starter treats the napplet surface like app chrome: static text does not
+show accidental selection highlights by default. The default is plain CSS in
+`src/styles.css`, not a shell or protocol rule.
+
+Use one of these app-local overrides when copy/select behavior is part of the
+napplet UX:
+
+```html
+<pre data-napplet-select="text">copyable output</pre>
+<code data-napplet-select="all">nostr:...</code>
+```
+
+For a text-heavy napplet, set the root variable instead:
+
+```css
+:root {
+  --napplet-text-selection: text;
+}
+```
+
 ## Relay
 
 Relay calls go through the shell.

@@ -32,6 +32,8 @@ Use this checklist before shipping meaningful changes to a napplet.
 - [ ] Long-lived subscriptions are closed on teardown.
 - [ ] User-triggered operations surface shell errors without crashing the app.
 - [ ] The app feature-detects optional NAPs with `shell.supports()`.
+- [ ] Text that should be copyable opts into selection with
+  `data-napplet-select` or a deliberate CSS override.
 
 ## Protocol Extensions
 

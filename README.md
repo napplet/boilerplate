@@ -30,6 +30,8 @@ workflow testing.
 - `@napplet/shim` side-effect install and typed `@napplet/sdk` helpers.
 - Build-time `@napplet/vite-plugin` wiring with a manifest-declared config
   schema.
+- Default app-chrome text selection disabled in `src/styles.css`, with
+  opt-in controls for copyable or editable regions.
 - Context documents for NIP-5D, shell boundaries, package surfaces, and authoring
   patterns.
 - Guidance for handling missing NAP interfaces or numbered wire formats without
@@ -49,6 +51,12 @@ Read these before changing protocol-facing behavior:
 
 The pinned NIP-5D source is referenced from `docs/nip-5d.md`; this template does
 not treat its local notes as normative protocol text.
+
+## Text Selection
+
+The starter disables accidental text selection by default. To change the whole
+napplet, set `--napplet-text-selection: text` in `src/styles.css`. To opt in one
+region, add `data-napplet-select="text"` or `data-napplet-select="all"`.
 
 ## Package Scripts
 

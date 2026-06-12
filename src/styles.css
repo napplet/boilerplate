@@ -14,6 +14,7 @@
   --danger: #b42318;
   --warning: #9a6700;
   --success: #16703b;
+  --napplet-text-selection: none;
 }
 
 :root[data-accent="green"] {
@@ -28,6 +29,21 @@
 
 * {
   box-sizing: border-box;
+}
+
+:where(html, body, body *) {
+  -webkit-user-select: var(--napplet-text-selection, none);
+  user-select: var(--napplet-text-selection, none);
+}
+
+:where(input, textarea, select, [contenteditable], [data-napplet-select="text"]) {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+:where([data-napplet-select="all"]) {
+  -webkit-user-select: all;
+  user-select: all;
 }
 
 body {
@@ -248,4 +264,3 @@ textarea {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
-

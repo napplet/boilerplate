@@ -2,6 +2,11 @@
 
 ## Runtime Packages
 
+If no package exposes the named interface or wire format you need, do not add a
+new private message domain in this app. Read `docs/new-nap-proposals.md` and
+propose protocol-level work in `https://github.com/napplet/naps` only when the
+guardrails are met.
+
 ### `@napplet/shim`
 
 Side-effect installer. Import once in the entry point.
@@ -50,4 +55,3 @@ into aggregate hash inputs, and can write a local `.nip5a-manifest.json` when
 `VITE_DEV_PRIVKEY_HEX` is set.
 
 Production relay publishing is intentionally outside this boilerplate.
-

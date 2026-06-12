@@ -102,3 +102,10 @@ if (window.napplet.shell.supports('nap:class') && getClass() === 2) {
 }
 ```
 
+## Missing Protocol Surface
+
+Do not create a new JSON envelope domain in app code when a named NAP interface
+or numbered wire format is missing. First check whether existing NAPs can be
+composed. If the feature really needs a reusable shell-mediated contract, follow
+`docs/new-nap-proposals.md` and open a focused PR to
+`https://github.com/napplet/naps`.

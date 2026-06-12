@@ -32,6 +32,8 @@ workflow testing.
   schema.
 - Context documents for NIP-5D, shell boundaries, package surfaces, and authoring
   patterns.
+- Guidance for handling missing NAP interfaces or numbered wire formats without
+  submitting unnecessary protocol PRs.
 - Local Codex skills for napplet authoring and verification.
 
 ## Authoring Context
@@ -42,6 +44,7 @@ Read these before changing protocol-facing behavior:
 - `docs/boundaries.md`
 - `docs/design-patterns.md`
 - `docs/package-surfaces.md`
+- `docs/new-nap-proposals.md`
 - `docs/authoring-checklist.md`
 
 The pinned NIP-5D source is referenced from `docs/nip-5d.md`; this template does
@@ -56,4 +59,3 @@ pnpm build        # Vite production build
 pnpm preview      # preview dist/
 pnpm verify       # type-check + build
 ```
-

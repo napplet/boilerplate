@@ -21,6 +21,14 @@ After `pnpm build`, inspect `dist/index.html` for:
   artifact mode
 - expected config schema metadata when config is declared
 
+## Protocol Checks
+
+- If the change introduces a new message domain, named interface, or numbered
+  wire format, verify `docs/new-nap-proposals.md` was followed.
+- Confirm app code does not claim support for unaccepted NAPs.
+- Confirm any experimental adapter is clearly app-local and not represented as
+  shell conformance.
+
 ## Runtime Smoke
 
 In a compatible shell:
@@ -30,4 +38,3 @@ In a compatible shell:
 3. Trigger one user action that uses the touched NAP surface.
 4. Confirm errors are visible in the app output instead of hidden in console.
 5. Confirm long-lived subscriptions close when the iframe unloads.
-

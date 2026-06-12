@@ -33,6 +33,16 @@ Use this checklist before shipping meaningful changes to a napplet.
 - [ ] User-triggered operations surface shell errors without crashing the app.
 - [ ] The app feature-detects optional NAPs with `shell.supports()`.
 
+## Protocol Extensions
+
+- [ ] The feature uses an existing NAP surface when one fits.
+- [ ] No new NAP name, number, message domain, or shell conformance language is
+  introduced inside this app.
+- [ ] If a new NAP seems necessary, `docs/new-nap-proposals.md` has been applied
+  and a focused PR to `https://github.com/napplet/naps` is the next step.
+- [ ] Experimental app-local adapters are clearly marked as non-protocol and do
+  not claim shell support.
+
 ## Build
 
 - [ ] `pnpm type-check` passes.
@@ -40,4 +50,3 @@ Use this checklist before shipping meaningful changes to a napplet.
 - [ ] Production HTML has no author-written executable inline script.
 - [ ] Manifest-affecting changes are intentional: config schema, connect origins,
   requires list, and built artifacts all affect aggregate hash behavior.
-

@@ -12,6 +12,8 @@ framework-light, and centered on the napplet side of the shell boundary.
    - `docs/package-surfaces.md`
 3. If changing protocol assumptions, verify against the pinned NIP-5D reference
    in `docs/nip-5d.md`.
+4. If the change appears to need a new NAP name, message domain, or numbered
+   wire format, read `docs/new-nap-proposals.md` before writing code.
 
 ## Hard Boundaries
 
@@ -24,6 +26,9 @@ framework-light, and centered on the napplet side of the shell boundary.
   checks NAP-CONNECT grant state and the origin is declared in `vite.config.ts`.
 - Prefer `resource.bytes()` for read-only external bytes.
 - Import `@napplet/shim` once at the app entry point before calling SDK helpers.
+- Do not invent app-local NAP names, numbers, or JSON envelope domains. Open a
+  proposal PR to `napplet/naps` only after the guardrails in
+  `docs/new-nap-proposals.md` are satisfied.
 
 ## Verification
 
@@ -37,4 +42,3 @@ pnpm build
 Use `pnpm dev` for shell/manual testing. A passing browser smoke test should
 cover iframe load, shell capability display, and at least one user-triggered SDK
 operation in the target shell.
-

@@ -10,12 +10,14 @@ boilerplate.
 3. Identify the NAP surface involved:
    - relay, identity, storage, inc, keys, media, notify, config, resource,
      connect, or class.
-4. Implement using `@napplet/sdk` first. Use `@napplet/nap/<domain>/sdk` only
+4. If no existing NAP fits, read `docs/new-nap-proposals.md`. Do not invent a
+   NAP name, number, or wire domain in app code.
+5. Implement using `@napplet/sdk` first. Use `@napplet/nap/<domain>/sdk` only
    when a granular import is materially clearer.
-5. Keep shell policy and privileged work out of the napplet.
-6. Update `config.schema.json` and `vite.config.ts` when settings, required
+6. Keep shell policy and privileged work out of the napplet.
+7. Update `config.schema.json` and `vite.config.ts` when settings, required
    capabilities, or connect origins change.
-7. Run `pnpm type-check` and `pnpm build`.
+8. Run `pnpm type-check` and `pnpm build`.
 
 ## Guardrails
 
@@ -24,5 +26,6 @@ boilerplate.
 - Do not add direct browser storage for durable data.
 - Do not add direct network access without `connect` manifest entries and
   `connectGranted()` runtime checks.
+- Do not submit or depend on a new wire format unless the NAP proposal guardrails
+  are satisfied.
 - Close subscriptions during teardown.
-

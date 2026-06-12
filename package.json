@@ -1,0 +1,25 @@
+{
+  "name": "my-napplet",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "type-check": "tsc --noEmit",
+    "verify": "pnpm type-check && pnpm build"
+  },
+  "dependencies": {
+    "@napplet/sdk": "^0.7.0",
+    "@napplet/shim": "^0.7.0"
+  },
+  "devDependencies": {
+    "@napplet/vite-plugin": "^0.5.0",
+    "typescript": "^5.9.3",
+    "vite": "^6.4.2"
+  },
+  "packageManager": "pnpm@10.8.0",
+  "license": "MIT"
+}
+

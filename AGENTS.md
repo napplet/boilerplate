@@ -1,0 +1,40 @@
+# Napplet Boilerplate Agent Guide
+
+This repository is a starter for one NIP-5D napplet. Keep it small,
+framework-light, and centered on the napplet side of the shell boundary.
+
+## Before Editing
+
+1. Read `docs/context-map.md`.
+2. Read the boundary document for the surface you are changing:
+   - `docs/boundaries.md`
+   - `docs/design-patterns.md`
+   - `docs/package-surfaces.md`
+3. If changing protocol assumptions, verify against the pinned NIP-5D reference
+   in `docs/nip-5d.md`.
+
+## Hard Boundaries
+
+- Do not add shell implementation code to this template.
+- Do not access signer keys, relay pools, cookies, service workers, or host DOM
+  directly from napplet code.
+- Do not use `localStorage` or `sessionStorage` for durable app state. Use
+  `@napplet/sdk` storage helpers.
+- Do not use direct `fetch`, `WebSocket`, or `EventSource` unless the code first
+  checks NAP-CONNECT grant state and the origin is declared in `vite.config.ts`.
+- Prefer `resource.bytes()` for read-only external bytes.
+- Import `@napplet/shim` once at the app entry point before calling SDK helpers.
+
+## Verification
+
+Run these before claiming completion:
+
+```bash
+pnpm type-check
+pnpm build
+```
+
+Use `pnpm dev` for shell/manual testing. A passing browser smoke test should
+cover iframe load, shell capability display, and at least one user-triggered SDK
+operation in the target shell.
+

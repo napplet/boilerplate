@@ -28,7 +28,10 @@ export default defineConfig({
   plugins: [
     nip5aManifest({
       nappletType: 'my-napplet',
-      artifactMode: 'single-file',
+      // External assets keep scripts out of index.html so the build runs under the
+      // shell's `script-src 'self'` CSP. Inline scripts (single-file mode) are
+      // blocked at runtime and fail `napplet-conformance`.
+      artifactMode: 'external-assets',
       requires: ['relay', 'storage', 'identity', 'config', 'resource', 'notify'],
       configSchema,
       // Add explicit origins here only when this napplet really needs direct

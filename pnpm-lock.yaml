@@ -9,15 +9,18 @@ importers:
   .:
     dependencies:
       '@napplet/sdk':
-        specifier: ^0.7.0
-        version: 0.7.0
+        specifier: ^0.11.0
+        version: 0.11.0
       '@napplet/shim':
-        specifier: ^0.7.0
-        version: 0.7.0
+        specifier: ^0.12.0
+        version: 0.12.0
     devDependencies:
+      '@napplet/conformance-cli':
+        specifier: ^0.1.1
+        version: 0.1.1
       '@napplet/vite-plugin':
-        specifier: ^0.5.0
-        version: 0.5.0(typescript@5.9.3)(vite@6.4.3)
+        specifier: ^0.7.0
+        version: 0.7.0(typescript@5.9.3)(vite@6.4.3)
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -183,25 +186,32 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@napplet/core@0.7.0':
-    resolution: {integrity: sha512-hq+O2e0xYG5ViOlwyKBlfj7JjMRm1IDRHLUFW0vuS8FKQ7GQ+b2p5bmAELp4/7UzdGaNIYHoFq9OpLQu87dZ3A==}
+  '@napplet/conformance-cli@0.1.1':
+    resolution: {integrity: sha512-5gP7TV4afmT9MHVz5sMKUxVYWrqP40VhclyIzC2Y2nuRDhiKsj+l8Z87PkKOtKQty1JnCJjq9+/VMz4vTxwc9A==}
+    hasBin: true
 
-  '@napplet/nap@0.7.0':
-    resolution: {integrity: sha512-UzSt28JSNOTTG81Qd5IV2EUY5En9FOdkolBs2WqEDNHg/QBSQHbdb7nf6SBdS2MIiHgqX831d+ai0MS0yErqTQ==}
+  '@napplet/conformance@0.1.1':
+    resolution: {integrity: sha512-k+7R94RBUaxM3fk7/iO96Ck49sHMYyLXBi4PT2+YJaiZfmZ04dnT25PhB0krFKk3p4BGGiYOTsXEaxLgat/3pQ==}
+
+  '@napplet/core@0.11.0':
+    resolution: {integrity: sha512-r44AcZ4hVfHbykzFR709LjzDfmVhPyt9M/0/xoJaTdB0K/9rL8ipvGQdp/xNivZhG0URgzgKOpvx1DLfWPXkFA==}
+
+  '@napplet/nap@0.11.0':
+    resolution: {integrity: sha512-UREfppLgDpQTkG/8im7EKM62FzrxOhsR5TBPkGVyoqFCvorSrDd544vVRWHQ+o99ufeX+QP4RO8K65NHf3kZ7Q==}
     peerDependencies:
       json-schema-to-ts: ^3.1.1
     peerDependenciesMeta:
       json-schema-to-ts:
         optional: true
 
-  '@napplet/sdk@0.7.0':
-    resolution: {integrity: sha512-amF+8kS57zzGwd37NMiCt4n00QTbdxSIcArFMQAC3l2FpJ7fKiJLgnZbjO5X+mG1AbutfyTBhBiVLR5J+DYmjA==}
+  '@napplet/sdk@0.11.0':
+    resolution: {integrity: sha512-TOhXdjjKGCJh/VtMIWj7DrThtnzZ62oRlSAlsyYkBic6gXxcEjttZGVJ7YphxlskWgczsb/6Z9/PJ4AWZE+n2g==}
 
-  '@napplet/shim@0.7.0':
-    resolution: {integrity: sha512-kcA91ciZer5SDQ/DH713UNhVPrUe2RH1oYMQ48bHa3W/eeVDPmgRTPRgNL/9Mpa85aNOdb2W2LkDRuH7IXnNnQ==}
+  '@napplet/shim@0.12.0':
+    resolution: {integrity: sha512-pPI3BlKE6aPNcJr7hc5Rmbp9i+sWzR/+JIOuWph5k7T+iGtR9cq3uaQsl2yq63WhCZfV8R2cgAoPYe0ZAazpZw==}
 
-  '@napplet/vite-plugin@0.5.0':
-    resolution: {integrity: sha512-lFakMTZNcSOPyZLEnC496yW/E8uzEz0CUx6NVk6Rwn2JFbp0coBKAGSnYNulGqx5N0dr9rgvNiFavVtsTWgRtw==}
+  '@napplet/vite-plugin@0.7.0':
+    resolution: {integrity: sha512-vpUY3x3dmneiqMEwtw8uMFKnL9JxY2hp6eS0AtQGMgj9oYWgG4oyI1WfWqzFskoNCCTW/ct/giNc0+DqeNsMhw==}
     peerDependencies:
       vite: '>=5.0.0'
 
@@ -368,6 +378,11 @@ packages:
       picomatch:
         optional: true
 
+  fsevents@2.3.2:
+    resolution: {integrity: sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==}
+    engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
+    os: [darwin]
+
   fsevents@2.3.3:
     resolution: {integrity: sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==}
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
@@ -395,6 +410,16 @@ packages:
   picomatch@4.0.4:
     resolution: {integrity: sha512-QP88BAKvMam/3NxH6vj2o21R6MjxZUAd6nlwAS/pnGvN9IVLocLHxGYIzFhg6fUQ+5th6P4dv4eW9jX3DSIj7A==}
     engines: {node: '>=12'}
+
+  playwright-core@1.61.0:
+    resolution: {integrity: sha512-caX7TrY3Ml6egyDX0WUcTHDxodl/b51y5wJOdCEA36QviK/s2g081hvmGs8eaE3DWb6NYZQ6BjO/QkNRPenoPA==}
+    engines: {node: '>=18'}
+    hasBin: true
+
+  playwright@1.61.0:
+    resolution: {integrity: sha512-Z+7BeeqQPRRzklHsVFP4KTGIyMxKUmfeRA4WisM6G3/XW6nwGeX6fX9qYaDa+CiUqpOkb2f6X3nar05R3kSuJQ==}
+    engines: {node: '>=18'}
+    hasBin: true
 
   postcss@8.5.15:
     resolution: {integrity: sha512-FfR8sjd4em2T6fb3I2MwAJU7HWVMr9zba+enmQeeWFfCbm+UOC/0X4DS8XtpUTMwWMGbjKYP7xjfNekzyGmB3A==}
@@ -538,27 +563,41 @@ snapshots:
   '@esbuild/win32-x64@0.25.12':
     optional: true
 
-  '@napplet/core@0.7.0': {}
-
-  '@napplet/nap@0.7.0':
+  '@napplet/conformance-cli@0.1.1':
     dependencies:
-      '@napplet/core': 0.7.0
-
-  '@napplet/sdk@0.7.0':
-    dependencies:
-      '@napplet/core': 0.7.0
-      '@napplet/nap': 0.7.0
+      '@napplet/conformance': 0.1.1
+      playwright: 1.61.0
     transitivePeerDependencies:
       - json-schema-to-ts
 
-  '@napplet/shim@0.7.0':
+  '@napplet/conformance@0.1.1':
     dependencies:
-      '@napplet/core': 0.7.0
-      '@napplet/nap': 0.7.0
+      '@napplet/core': 0.11.0
+      '@napplet/nap': 0.11.0
     transitivePeerDependencies:
       - json-schema-to-ts
 
-  '@napplet/vite-plugin@0.5.0(typescript@5.9.3)(vite@6.4.3)':
+  '@napplet/core@0.11.0': {}
+
+  '@napplet/nap@0.11.0':
+    dependencies:
+      '@napplet/core': 0.11.0
+
+  '@napplet/sdk@0.11.0':
+    dependencies:
+      '@napplet/core': 0.11.0
+      '@napplet/nap': 0.11.0
+    transitivePeerDependencies:
+      - json-schema-to-ts
+
+  '@napplet/shim@0.12.0':
+    dependencies:
+      '@napplet/core': 0.11.0
+      '@napplet/nap': 0.11.0
+    transitivePeerDependencies:
+      - json-schema-to-ts
+
+  '@napplet/vite-plugin@0.7.0(typescript@5.9.3)(vite@6.4.3)':
     dependencies:
       nostr-tools: 2.23.5(typescript@5.9.3)
       vite: 6.4.3
@@ -696,6 +735,9 @@ snapshots:
     optionalDependencies:
       picomatch: 4.0.4
 
+  fsevents@2.3.2:
+    optional: true
+
   fsevents@2.3.3:
     optional: true
 
@@ -718,6 +760,14 @@ snapshots:
   picocolors@1.1.1: {}
 
   picomatch@4.0.4: {}
+
+  playwright-core@1.61.0: {}
+
+  playwright@1.61.0:
+    dependencies:
+      playwright-core: 1.61.0
+    optionalDependencies:
+      fsevents: 2.3.2
 
   postcss@8.5.15:
     dependencies:

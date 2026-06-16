@@ -7,19 +7,25 @@ Use this skill before claiming a napplet change is complete.
 ```bash
 pnpm type-check
 pnpm build
+pnpm test:conformance
 ```
 
-Read the command output. Do not report success until both pass.
+Read the command output. Do not report success until all pass. `test:conformance`
+is authoritative for protocol conformance; `--ui` (`pnpm test:conformance:ui`) gives
+a live, re-running visual report.
 
 ## Artifact Checks
 
-After `pnpm build`, inspect `dist/index.html` for:
+`pnpm test:conformance` checks the built `dist/` automatically. If inspecting
+`dist/index.html` by hand, confirm:
 
-- `napplet-aggregate-hash`
-- `napplet-napp-type`
-- no author-written executable inline script outside the plugin's selected
-  artifact mode
-- expected config schema metadata when config is declared
+- `napplet-type` meta is present.
+- No executable inline `<script>` (build to external assets, not single-file —
+  inline scripts fail conformance under the shell `script-src 'self'` CSP).
+- Expected config-schema metadata when config is declared.
+
+There is no `napplet-aggregate-hash` meta: a napplet cannot contain a hash that
+covers itself; the shell computes the aggregate hash from the served files.
 
 ## Protocol Checks
 

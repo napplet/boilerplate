@@ -17,7 +17,7 @@ boilerplate.
 6. Keep shell policy and privileged work out of the napplet.
 7. Update `config.schema.json` and `vite.config.ts` when settings, required
    capabilities, or connect origins change.
-8. Run `pnpm type-check` and `pnpm build`.
+8. Run `pnpm type-check`, `pnpm build`, and `pnpm test:conformance`.
 
 ## Guardrails
 

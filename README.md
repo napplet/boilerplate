@@ -24,6 +24,35 @@ pnpm verify
 `VITE_DEV_PRIVKEY_HEX` is set, write a local `.nip5a-manifest.json` for hash
 workflow testing.
 
+## Conformance Testing
+
+Verify the napplet conforms to the NAP protocol before publishing. Two variants,
+mirroring `vitest` vs `vitest --ui`:
+
+```bash
+pnpm test:conformance      # headless: build + check; non-zero exit on failure (CI)
+pnpm test:conformance:ui   # live web runtime; re-runs on every source change
+```
+
+It loads the build into a real `sandbox="allow-scripts"` iframe, drives the
+protocol with a reference shell, and fails on a malformed envelope, a manifest
+problem, a boot failure, or a forbidden-global reference (e.g. `window.nostr`).
+
+Exacting requirements for a passing build:
+
+- Build to **external assets** (`artifactMode: 'external-assets'` in `vite.config.ts`).
+  Inline scripts are blocked by the shell's `script-src 'self'` CSP and fail the
+  `no-inline-scripts` check; single-file mode is not conformant.
+- Import `@napplet/shim` once at the entry point — the shim's `shell.ready`
+  handshake is how conformance detects a successful boot.
+- Emit only well-formed envelopes via `@napplet/sdk`; declare every NAP you use in
+  `vite.config.ts` `requires`.
+- Do not reference `window.nostr` or use direct `fetch`/`WebSocket`/`localStorage`.
+
+The napplet does **not** carry an aggregate hash: a file cannot contain a hash that
+covers itself, so the shell computes it from the served files. Conformance does not
+check for one.
+
 ## Included
 
 - Vanilla Vite + TypeScript napplet app.
@@ -66,4 +95,6 @@ pnpm type-check   # TypeScript strict-mode check
 pnpm build        # Vite production build
 pnpm preview      # preview dist/
 pnpm verify       # type-check + build
+pnpm test:conformance     # headless NAP conformance (build + check, CI exit code)
+pnpm test:conformance:ui  # live conformance web runtime, re-runs on change
 ```

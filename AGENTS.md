@@ -37,7 +37,12 @@ Run these before claiming completion:
 ```bash
 pnpm type-check
 pnpm build
+pnpm test:conformance
 ```
+
+`test:conformance` loads the built napplet in a real `allow-scripts` iframe and
+fails on a malformed envelope, a manifest problem, a boot failure, or a
+forbidden-global reference. Use `pnpm test:conformance:ui` for the live runtime.
 
 Use `pnpm dev` for shell/manual testing. A passing browser smoke test should
 cover iframe load, shell capability display, and at least one user-triggered SDK

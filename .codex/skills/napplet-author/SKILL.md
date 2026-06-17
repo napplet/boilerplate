@@ -24,8 +24,9 @@ boilerplate.
 - Do not introduce framework dependencies unless the task explicitly requires
   them.
 - Do not add direct browser storage for durable data.
-- Do not add direct network access without `connect` manifest entries and
-  `connectGranted()` runtime checks.
+- Do not add direct network access (`fetch`/`WebSocket`/`EventSource`).
+  NAP-CONNECT, the direct-network grant model, is currently deferred on the NAPs
+  track; use `resource.bytes()` for read-only external bytes instead.
 - Do not submit or depend on a new wire format unless the NAP proposal guardrails
   are satisfied.
 - Close subscriptions during teardown.

@@ -98,31 +98,16 @@ const blob = await resource.bytes('https://example.com/avatar.png');
 For images, prefer `bytesAsObjectURL()` and revoke the handle when the element is
 done using it.
 
-## Direct Network Access
+## Deferred NAPs (direct network access, security class)
 
-Direct network access is exceptional. Declare required origins in
-`vite.config.ts`, then gate code on the runtime grant.
-
-```ts
-if (connectGranted()) {
-  const [origin] = connectOrigins();
-  await fetch(`${origin}/api`);
-}
-```
-
-If the grant is absent, use a resource fallback or disable the direct-network
-workflow.
-
-## Class
-
-`getClass()` returns the shell-assigned class or `undefined`. Treat it as
-information from the shell, not as something the napplet can compute.
-
-```ts
-if (window.napplet.shell.supports('nap:class') && getClass() === 2) {
-  // The shell says it is enforcing the class-2 posture.
-}
-```
+NAP-CONNECT (direct-network grants: `connectGranted()` / `connectOrigins()`) and
+NAP-CLASS (shell-assigned posture: `getClass()`) are currently **deferred** on
+the [NAPs track](https://github.com/napplet/naps). They are not part of the
+active surface: the `connect`/`class` domains, their SDK helpers, and the
+vite-plugin `connect` option have been removed. Do not depend on them. For
+read-only external bytes, use `resource.bytes()`. If your napplet genuinely needs
+a capability the active NAPs do not cover, propose it on the track first (see
+below) rather than reaching for removed surface.
 
 ## Missing Protocol Surface
 

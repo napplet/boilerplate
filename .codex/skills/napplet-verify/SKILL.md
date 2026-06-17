@@ -20,8 +20,10 @@ a live, re-running visual report.
 `dist/index.html` by hand, confirm:
 
 - `napplet-type` meta is present.
-- No executable inline `<script>` (build to external assets, not single-file —
-  inline scripts fail conformance under the shell `script-src 'self'` CSP).
+- The build is a single self-contained `index.html` with its JS/CSS inlined
+  (`vite-plugin-singlefile`). A NIP-5D napplet loads via `iframe.srcdoc` (opaque
+  origin), so external `<script src>`/`<link href>` assets cannot be fetched —
+  inline is required, not forbidden. No external asset references should remain.
 - Expected config-schema metadata when config is declared.
 
 There is no `napplet-aggregate-hash` meta: a napplet cannot contain a hash that

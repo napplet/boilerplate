@@ -16,9 +16,9 @@ Use this checklist before shipping meaningful changes to a napplet.
 
 - [ ] Read-only external bytes use `resource.bytes()` or
   `resource.bytesAsObjectURL()`.
-- [ ] Direct `fetch`/`WebSocket` is used only after `connectGranted()`.
-- [ ] Every direct origin is declared in `vite.config.ts` `connect`.
-- [ ] The UI has a fallback path when connect is not granted.
+- [ ] No direct `fetch`/`WebSocket`/`EventSource` — NAP-CONNECT (direct-network
+  grants) is currently deferred on the NAPs track, so there is no active
+  direct-network surface.
 
 ## Config
 
@@ -49,6 +49,7 @@ Use this checklist before shipping meaningful changes to a napplet.
 
 - [ ] `pnpm type-check` passes.
 - [ ] `pnpm build` passes.
-- [ ] Production HTML has no author-written executable inline script.
-- [ ] Manifest-affecting changes are intentional: config schema, connect origins,
-  requires list, and built artifacts all affect aggregate hash behavior.
+- [ ] The build is a single self-contained `index.html` (JS/CSS inlined) with no
+  external asset references — required for `iframe.srcdoc` loading.
+- [ ] Manifest-affecting changes are intentional: config schema, requires list,
+  and built artifacts all affect aggregate hash behavior.

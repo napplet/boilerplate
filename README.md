@@ -40,9 +40,11 @@ problem, a boot failure, or a forbidden-global reference (e.g. `window.nostr`).
 
 Exacting requirements for a passing build:
 
-- Build to **external assets** (`artifactMode: 'external-assets'` in `vite.config.ts`).
-  Inline scripts are blocked by the shell's `script-src 'self'` CSP and fail the
-  `no-inline-scripts` check; single-file mode is not conformant.
+- Build to a **single self-contained `index.html`** (`vite-plugin-singlefile` in
+  `vite.config.ts`). NIP-5D loads a napplet via `iframe.srcdoc` with
+  `sandbox="allow-scripts"` and no `allow-same-origin` (an opaque origin) — there
+  is no served origin from which to fetch an external `<script src>`, so the JS
+  must be inlined into the one file. External-asset builds do not boot.
 - Import `@napplet/shim` once at the entry point — the shim's `shell.ready`
   handshake is how conformance detects a successful boot.
 - Emit only well-formed envelopes via `@napplet/sdk`; declare every NAP you use in

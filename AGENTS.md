@@ -22,9 +22,10 @@ framework-light, and centered on the napplet side of the shell boundary.
   directly from napplet code.
 - Do not use `localStorage` or `sessionStorage` for durable app state. Use
   `@napplet/sdk` storage helpers.
-- Do not use direct `fetch`, `WebSocket`, or `EventSource` unless the code first
-  checks NAP-CONNECT grant state and the origin is declared in `vite.config.ts`.
-- Prefer `resource.bytes()` for read-only external bytes.
+- Do not use direct `fetch`, `WebSocket`, or `EventSource`. NAP-CONNECT (the
+  direct-network grant model) is currently deferred on the NAPs track, so there
+  is no active direct-network surface. Use `resource.bytes()` for read-only
+  external bytes.
 - Import `@napplet/shim` once at the app entry point before calling SDK helpers.
 - Do not invent app-local NAP names, numbers, or JSON envelope domains. Open a
   proposal PR to `napplet/naps` only after the guardrails in

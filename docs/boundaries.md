@@ -20,9 +20,10 @@ The template should stay on the napplet side of that line.
 - User identity and signer state.
 - Storage persistence and quota.
 - External byte fetching through NAP-RESOURCE.
-- Direct-network grant prompts and CSP response headers through NAP-CONNECT.
-- Security class assignment through NAP-CLASS.
 - Settings UI for NAP-CONFIG.
+
+(NAP-CONNECT direct-network grants and NAP-CLASS security-class assignment are
+currently deferred on the NAPs track — not part of the active surface.)
 
 ## Forbidden In Napplet Code
 
@@ -41,7 +42,4 @@ The template should stay on the napplet side of that line.
 - `import { relay, storage, identity } from '@napplet/sdk';` for named helpers.
 - `storage.setItem()` for durable key-value app state.
 - `resource.bytes()` for external read-only bytes.
-- `connectGranted()` and `connectOrigins()` before direct network access.
-- `getClass()` as a reflection of shell-assigned posture, not as a way to infer
-  policy from the browser environment.
 

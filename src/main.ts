@@ -1,17 +1,12 @@
 import '@napplet/shim';
 import {
-  CLASS_DOMAIN,
   CONFIG_DOMAIN,
-  CONNECT_DOMAIN,
   IDENTITY_DOMAIN,
   NOTIFY_DOMAIN,
   RELAY_DOMAIN,
   RESOURCE_DOMAIN,
   STORAGE_DOMAIN,
   config,
-  connectGranted,
-  connectOrigins,
-  getClass,
   identity,
   notify,
   relay,
@@ -84,8 +79,6 @@ function featureStatus(capability: string): 'yes' | 'no' {
 }
 
 function renderCapabilities(): void {
-  const assignedClass = getClass();
-  const origins = connectOrigins();
   const rows = [
     ['relay', featureStatus(RELAY_DOMAIN)],
     ['storage', featureStatus(STORAGE_DOMAIN)],
@@ -93,8 +86,6 @@ function renderCapabilities(): void {
     ['config', featureStatus(CONFIG_DOMAIN)],
     ['resource', featureStatus(RESOURCE_DOMAIN)],
     ['notify', featureStatus(NOTIFY_DOMAIN)],
-    ['connect', connectGranted() ? origins.join(', ') : featureStatus(CONNECT_DOMAIN)],
-    ['class', assignedClass === undefined ? featureStatus(CLASS_DOMAIN) : String(assignedClass)],
   ];
 
   elements.capabilities.replaceChildren(
@@ -262,9 +253,5 @@ window.addEventListener('beforeunload', () => {
 renderCapabilities();
 subscribeToIdentityChanges();
 subscribeToConfigChanges();
-setOutput({
-  class: getClass() ?? 'unassigned',
-  connectGranted: connectGranted(),
-  connectOrigins: connectOrigins(),
-});
+setOutput('Napplet ready. Use the actions above to exercise each shell surface.');
 

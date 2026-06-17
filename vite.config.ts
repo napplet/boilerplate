@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite';
+import { viteSingleFile } from 'vite-plugin-singlefile';
 import { nip5aManifest } from '@napplet/vite-plugin';
 import type { NappletConfigSchema } from '@napplet/sdk';
 
@@ -26,17 +27,18 @@ const configSchema = {
 
 export default defineConfig({
   plugins: [
+    // Inline all JS/CSS into a single `index.html`. NIP-5D loads a napplet as a
+    // single self-contained `/index.html` via `iframe.srcdoc` with
+    // `sandbox="allow-scripts"` and no `allow-same-origin` (an opaque origin):
+    // there is no served origin from which the shell could fetch an external
+    // `<script src>`/`<link href>`, so the whole napplet must be one inlined
+    // file. `vite-plugin-singlefile` produces that artifact; `nip5aManifest`
+    // then content-addresses it for the NIP-5A manifest.
+    viteSingleFile(),
     nip5aManifest({
       nappletType: 'my-napplet',
-      // External assets keep scripts out of index.html so the build runs under the
-      // shell's `script-src 'self'` CSP. Inline scripts (single-file mode) are
-      // blocked at runtime and fail `napplet-conformance`.
-      artifactMode: 'external-assets',
       requires: ['relay', 'storage', 'identity', 'config', 'resource', 'notify'],
       configSchema,
-      // Add explicit origins here only when this napplet really needs direct
-      // network access. Prefer resource.bytes() for read-only external bytes.
-      connect: [],
     }),
   ],
 });

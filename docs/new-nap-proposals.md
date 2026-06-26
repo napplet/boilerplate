@@ -11,15 +11,14 @@ NAP surface, keep the behavior app-local, or open a proposal PR to
 
 1. **Check existing NAPs first.** Read `docs/package-surfaces.md`, the relevant
    package README, and current `napplet/naps` specs. Prefer existing relay,
-   storage, inc, keys, theme, media, notify, identity, config, resource,
-   connect, and class surfaces.
+   storage, inc, keys, theme, media, notify, identity, config, resource, intent,
+   ble, webrtc, link, lists, common, serial, and dm surfaces.
 2. **Classify the need.** If it is only UI state, app business logic, a local
    helper, or one app's private convention, keep it in app code. It is not a NAP.
 3. **Try composition.** Combine existing NAPs before adding a new one. Examples:
    use `config` for user-editable settings, `storage` for durable app state,
-   `resource` for read-only external bytes, `connect` only for direct network
-   access that must bypass the resource proxy, and `inc` for inter-napplet
-   events that do not need a new shell-owned service.
+   `resource` for read-only external bytes, and `inc` for inter-napplet events
+   that do not need a new shell-owned service.
 4. **Prototype without wire authority.** If a shape is uncertain, write a local
    adapter or exploratory doc. Do not assign a NAP name, number, or shell
    conformance language yet.
@@ -81,4 +80,3 @@ This boilerplate may document a potential future NAP, but it must not ship
 runtime code that depends on an unaccepted NAP. Until the upstream PR lands and
 published `@napplet` packages expose the surface, keep experiments behind local
 adapters and avoid naming them as supported protocol features.
-

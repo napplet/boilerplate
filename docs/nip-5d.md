@@ -4,11 +4,11 @@ This repository does not contain normative protocol text.
 
 Authoritative pinned source:
 
-`https://raw.githubusercontent.com/dskvr/nips/d80d7b25f9c4331acbeb40dbeb3b077caa80e885/5D.md`
+`https://raw.githubusercontent.com/dskvr/nips/6ca56324a3764a17141e681225f0aaa0ad45a5b6/5D.md`
 
 Pinned source commit:
 
-`d80d7b25f9c4331acbeb40dbeb3b077caa80e885`
+`6ca56324a3764a17141e681225f0aaa0ad45a5b6`
 
 Related upstream discussion:
 
@@ -18,7 +18,7 @@ Related upstream discussion:
 
 - Confirm the JSON envelope shape for napplet-shell postMessage transport.
 - Confirm iframe sandbox assumptions.
-- Confirm how a shell advertises NAP capability support.
+- Confirm runtime injection and domain-property availability semantics.
 - Confirm that shell-owned services, not the napplet, hold privileged access.
 
 ## What Not To Do
@@ -29,4 +29,3 @@ Related upstream discussion:
 
 When protocol behavior appears to conflict with a package README, check the
 pinned NIP-5D source and then the current `@napplet` package source.
-

@@ -8,7 +8,7 @@ The template should stay on the napplet side of that line.
 - UI state and rendering.
 - User gestures inside the iframe.
 - Calls into `window.napplet` through `@napplet/sdk`.
-- Feature detection with `window.napplet.shell.supports()`.
+- Feature detection with injected domain property presence.
 - Subscription cleanup for relay, identity, config, keys, media, notify, and INC
   listeners.
 - Graceful fallback when a shell does not implement a requested NAP.
@@ -38,8 +38,7 @@ currently deferred on the NAPs track — not part of the active surface.)
 
 ## Allowed Patterns
 
-- `import '@napplet/shim';` at the app entry point.
 - `import { relay, storage, identity } from '@napplet/sdk';` for named helpers.
+- `if (window.napplet?.resource) { ... }` before using optional domains.
 - `storage.setItem()` for durable key-value app state.
 - `resource.bytes()` for external read-only bytes.
-

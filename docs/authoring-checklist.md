@@ -4,10 +4,10 @@ Use this checklist before shipping meaningful changes to a napplet.
 
 ## App Boundary
 
-- [ ] The app relies on runtime-injected `window.napplet`; it does not import
-  `@napplet/shim`.
-- [ ] Protocol calls use `@napplet/sdk` or explicit `@napplet/nap/<domain>/sdk`
-  helpers.
+- [ ] The app does not import `@napplet/shim`; the runtime injects
+  `window.napplet`.
+- [ ] Protocol calls use `@napplet/sdk`, direct `window.napplet.<domain>.*`, or
+  explicit `@napplet/nap/<domain>/sdk` helpers.
 - [ ] No app code reads or writes signer keys.
 - [ ] No app code reads shell DOM, parent cookies, service workers, or host
   storage.
@@ -33,7 +33,7 @@ Use this checklist before shipping meaningful changes to a napplet.
 - [ ] Long-lived subscriptions are closed on teardown.
 - [ ] User-triggered operations surface shell errors without crashing the app.
 - [ ] The app feature-detects optional NAPs with injected domain property
-  presence, e.g. `window.napplet?.resource`.
+  presence, such as `window.napplet?.resource`.
 - [ ] Text that should be copyable opts into selection with
   `data-napplet-select` or a deliberate CSS override.
 

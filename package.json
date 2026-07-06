@@ -13,13 +13,13 @@
     "test:conformance:ui": "napplet-conformance --ui . --exec \"vite build --watch\""
   },
   "dependencies": {
-    "@napplet/sdk": "^0.20.0"
+    "@napplet/sdk": "^0.24.1"
   },
   "devDependencies": {
-    "@napplet/conformance-cli": "^0.2.9",
-    "@napplet/vite-plugin": "^0.10.0",
+    "@napplet/conformance-cli": "^0.2.13",
+    "@napplet/vite-plugin": "^0.10.1",
     "typescript": "^5.9.3",
-    "vite": "^6.4.3",
+    "vite": "^6.4.2",
     "vite-plugin-singlefile": "^2.3.3"
   },
   "packageManager": "pnpm@10.8.0",

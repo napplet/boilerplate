@@ -9,14 +9,14 @@ boilerplate.
 2. Read `docs/boundaries.md` and `docs/design-patterns.md`.
 3. Identify the NAP surface involved:
    - relay, identity, storage, inc, keys, media, notify, config, resource,
-     connect, or class.
+     outbox, common, lists, count, or dm.
 4. If no existing NAP fits, read `docs/new-nap-proposals.md`. Do not invent a
    NAP name, number, or wire domain in app code.
 5. Implement using `@napplet/sdk` first. Use `@napplet/nap/<domain>/sdk` only
    when a granular import is materially clearer.
 6. Keep shell policy and privileged work out of the napplet.
-7. Update `config.schema.json` and `vite.config.ts` when settings, required
-   capabilities, or connect origins change.
+7. Update `config.schema.json` and `vite.config.ts` when settings or required
+   domains change.
 8. Run `pnpm type-check`, `pnpm build`, and `pnpm test:conformance`.
 
 ## Guardrails

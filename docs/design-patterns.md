@@ -99,14 +99,13 @@ done using it.
 
 ## Deferred NAPs (direct network access, security class)
 
-NAP-CONNECT (direct-network grants: `connectGranted()` / `connectOrigins()`) and
-NAP-CLASS (shell-assigned posture: `getClass()`) are currently **deferred** on
-the [NAPs track](https://github.com/napplet/naps). They are not part of the
-active surface: the `connect`/`class` domains, their SDK helpers, and the
-vite-plugin `connect` option have been removed. Do not depend on them. For
-read-only external bytes, use `resource.bytes()`. If your napplet genuinely needs
-a capability the active NAPs do not cover, propose it on the track first (see
-below) rather than reaching for removed surface.
+NAP-CONNECT direct-network grants and NAP-CLASS shell-assigned security posture
+are currently **deferred** on the [NAPs track](https://github.com/napplet/naps).
+They are not part of the active surface: the `connect`/`class` domains, their
+SDK helpers, and the vite-plugin `connect` option have been removed. Do not
+depend on them. For read-only external bytes, use `resource.bytes()`. If your
+napplet genuinely needs a capability the active NAPs do not cover, propose it on
+the track first (see below) rather than reaching for removed surface.
 
 ## Missing Protocol Surface
 

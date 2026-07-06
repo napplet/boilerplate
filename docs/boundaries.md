@@ -7,7 +7,7 @@ The template should stay on the napplet side of that line.
 
 - UI state and rendering.
 - User gestures inside the iframe.
-- Calls into `window.napplet` through `@napplet/sdk`.
+- Calls into runtime-injected `window.napplet` through `@napplet/sdk`.
 - Feature detection with injected domain property presence.
 - Subscription cleanup for relay, identity, config, keys, media, notify, and INC
   listeners.

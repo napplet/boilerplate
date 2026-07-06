@@ -3,9 +3,9 @@
 A small TypeScript starter for building a NIP-5D napplet with the published
 `@napplet` packages.
 
-Napplets are sandboxed iframe apps. The runtime injects `window.napplet` before
-the app runs; this starter uses `@napplet/sdk` to ask the host shell for relay,
-identity, storage, resource, config, and notification services.
+Napplets are sandboxed iframe apps. The shell/runtime injects `window.napplet`
+before app code runs; the app uses `@napplet/sdk` to call available NAP domains
+such as relay, identity, storage, resource, config, and notify.
 
 ## Start
 
@@ -45,8 +45,9 @@ Exacting requirements for a passing build:
   `sandbox="allow-scripts"` and no `allow-same-origin` (an opaque origin) — there
   is no served origin from which to fetch an external `<script src>`, so the JS
   must be inlined into the one file. External-asset builds do not boot.
-- Let the runtime inject `window.napplet` before app code runs. Do not add an
-  app-owned shim bootstrap or shell-ready handshake.
+- Do not import `@napplet/shim` from app code. The runtime injects
+  `window.napplet`; conformance verifies boot and emitted envelopes through the
+  reference runtime.
 - Emit only well-formed envelopes via `@napplet/sdk`; declare every NAP you use in
   `vite.config.ts` `requires`.
 - Do not reference `window.nostr` or use direct `fetch`/`WebSocket`/`localStorage`.
@@ -58,7 +59,8 @@ check for one.
 ## Included
 
 - Vanilla Vite + TypeScript napplet app.
-- Runtime-injected domain usage and typed `@napplet/sdk` helpers.
+- Typed `@napplet/sdk` helpers over the runtime-injected `window.napplet`
+  namespace.
 - Build-time `@napplet/vite-plugin` wiring with a manifest-declared config
   schema.
 - Default app-chrome text selection disabled in `src/styles.css`, with

@@ -18,10 +18,8 @@ import './styles.css';
 
 type StatusKind = 'idle' | 'ok' | 'warn' | 'error';
 
-type ShellShape = {
-  napplet?: {
-    [domain: string]: unknown;
-  };
+type NappletWindow = Window & {
+  napplet?: Record<string, unknown>;
 };
 
 const elements = {
@@ -60,19 +58,19 @@ function setOutput(value: unknown): void {
     typeof value === 'string' ? value : JSON.stringify(value, null, 2);
 }
 
-function featureStatus(capability: string): 'yes' | 'no' {
-  const napplet = (window as Window & ShellShape).napplet;
-  return napplet && capability in napplet ? 'yes' : 'no';
+function domainStatus(domain: string): 'yes' | 'no' {
+  const napplet = (window as NappletWindow).napplet;
+  return napplet && domain in napplet ? 'yes' : 'no';
 }
 
 function renderCapabilities(): void {
   const rows = [
-    ['relay', featureStatus(RELAY_DOMAIN)],
-    ['storage', featureStatus(STORAGE_DOMAIN)],
-    ['identity', featureStatus(IDENTITY_DOMAIN)],
-    ['config', featureStatus(CONFIG_DOMAIN)],
-    ['resource', featureStatus(RESOURCE_DOMAIN)],
-    ['notify', featureStatus(NOTIFY_DOMAIN)],
+    ['relay', domainStatus(RELAY_DOMAIN)],
+    ['storage', domainStatus(STORAGE_DOMAIN)],
+    ['identity', domainStatus(IDENTITY_DOMAIN)],
+    ['config', domainStatus(CONFIG_DOMAIN)],
+    ['resource', domainStatus(RESOURCE_DOMAIN)],
+    ['notify', domainStatus(NOTIFY_DOMAIN)],
   ];
 
   elements.capabilities.replaceChildren(
@@ -152,7 +150,7 @@ async function queryRelay(): Promise<void> {
     'relay.query',
     8000,
   );
-  setOutput(events.map(summarizeEvent));
+  setOutput(events.map((result) => summarizeEvent(result.event)));
   setStatus('ok', `Loaded ${events.length} relay event${events.length === 1 ? '' : 's'}`);
 }
 
@@ -240,4 +238,4 @@ window.addEventListener('beforeunload', () => {
 renderCapabilities();
 subscribeToIdentityChanges();
 subscribeToConfigChanges();
-setOutput('Napplet ready. Use the actions above to exercise each shell surface.');
+setOutput('Napplet ready. Use the actions above to exercise each NAP domain.');

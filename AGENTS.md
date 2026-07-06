@@ -26,7 +26,7 @@ framework-light, and centered on the napplet side of the shell boundary.
   direct-network grant model) is currently deferred on the NAPs track, so there
   is no active direct-network surface. Use `resource.bytes()` for read-only
   external bytes.
-- Do not import `@napplet/shim` from napplet code. The runtime injects
+- Do not import `@napplet/shim` from napplet code. The shell/runtime injects
   `window.napplet`; app code uses `@napplet/sdk` or direct domain properties.
 - Do not invent app-local NAP names, numbers, or JSON envelope domains. Open a
   proposal PR to `napplet/naps` only after the guardrails in
@@ -47,5 +47,5 @@ fails on a malformed envelope, a manifest problem, a boot failure, or a
 forbidden-global reference. Use `pnpm test:conformance:ui` for the live runtime.
 
 Use `pnpm dev` for shell/manual testing. A passing browser smoke test should
-cover iframe load, shell capability display, and at least one user-triggered SDK
+cover iframe load, injected-domain display, and at least one user-triggered SDK
 operation in the target shell.

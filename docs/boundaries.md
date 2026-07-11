@@ -9,8 +9,8 @@ The template should stay on the napplet side of that line.
 - User gestures inside the iframe.
 - Calls into runtime-injected `window.napplet` through `@napplet/sdk`.
 - Feature detection with injected domain property presence.
-- Subscription cleanup for relay, identity, config, keys, media, notify, and INC
-  listeners.
+- Subscription cleanup for outbox, relay-local escape hatches, identity, config,
+  keys, media, notify, and INC listeners.
 - Graceful fallback when a shell does not implement a requested NAP.
 
 ## Shell Owns
@@ -33,12 +33,14 @@ currently deferred on the NAPs track — not part of the active surface.)
 - Service worker registration.
 - Cookie access.
 - Unchecked direct network access.
-- Shell policy decisions such as ACL, CSP, resource allowlists, or consent
+- Shell policy decisions such as ACL, resource allowlists, or consent
   persistence.
 
 ## Allowed Patterns
 
-- `import { relay, storage, identity } from '@napplet/sdk';` for named helpers.
+- `import { outbox, storage, identity } from '@napplet/sdk';` for named helpers.
 - `if (window.napplet?.resource) { ... }` before using optional domains.
+- `relay.subscribe(..., { relay: groupRelay })` only when the feature requires
+  explicit relay-local semantics that OUTBOX cannot express.
 - `storage.setItem()` for durable key-value app state.
 - `resource.bytes()` for external read-only bytes.

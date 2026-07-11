@@ -2,15 +2,7 @@
 
 This repository does not contain normative protocol text.
 
-Authoritative pinned source:
-
-`https://raw.githubusercontent.com/dskvr/nips/d80d7b25f9c4331acbeb40dbeb3b077caa80e885/5D.md`
-
-Pinned source commit:
-
-`d80d7b25f9c4331acbeb40dbeb3b077caa80e885`
-
-Related upstream discussion:
+Authoritative living source:
 
 `https://github.com/nostr-protocol/nips/pull/2303`
 
@@ -27,5 +19,6 @@ Related upstream discussion:
 - Do not treat this template as the spec.
 - Do not infer missing shell behavior from browser side effects.
 
-When protocol behavior appears to conflict with a package README, check the
-pinned NIP-5D source and then the current `@napplet` package source.
+When protocol behavior appears to conflict with a package README or NAP draft,
+check the current NIP-5D PR head and the relevant living NAP text before using
+the current `@napplet` package source as implementation evidence.

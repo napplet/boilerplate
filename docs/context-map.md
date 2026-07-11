@@ -11,7 +11,8 @@ Read the smallest set that covers the change.
 | Missing NAP interface or wire format | `docs/new-nap-proposals.md` |
 | Pre-merge checklist | `docs/authoring-checklist.md` |
 | Conformance testing | `pnpm test:conformance` / `:ui` (see README) |
-| Agent workflow | `.codex/skills/napplet-author/SKILL.md` and `.codex/skills/napplet-verify/SKILL.md` |
+| Agent workflow | `.codex/skills/README.md`, then install/use `@napplet/skills` |
 
-The upstream napplet SDK is alpha. Treat package README files and the pinned
-NIP-5D source as more authoritative than assumptions copied into this template.
+The upstream napplet SDK is alpha. Treat current package README files and the
+living NIP-5D/NAP sources as more authoritative than assumptions copied into
+this template.

@@ -6,8 +6,8 @@ Use this checklist before shipping meaningful changes to a napplet.
 
 - [ ] The app does not import `@napplet/shim`; the runtime injects
   `window.napplet`.
-- [ ] Protocol calls use `@napplet/sdk`, direct `window.napplet.<domain>.*`, or
-  explicit `@napplet/nap/<domain>/sdk` helpers.
+- [ ] Protocol calls use `@napplet/sdk` helpers. Direct
+  `window.napplet?.<domain>` access is limited to optional-domain checks.
 - [ ] No app code reads or writes signer keys.
 - [ ] No app code reads shell DOM, parent cookies, service workers, or host
   storage.
@@ -15,18 +15,23 @@ Use this checklist before shipping meaningful changes to a napplet.
 
 ## Network And Resources
 
+- [ ] Normal Nostr reads and publishes use OUTBOX or a higher-level social NAP.
+- [ ] RELAY is used only for a documented relay-local escape hatch.
 - [ ] Read-only external bytes use `resource.bytes()` or
   `resource.bytesAsObjectURL()`.
 - [ ] No direct `fetch`/`WebSocket`/`EventSource` — NAP-CONNECT (direct-network
   grants) is currently deferred on the NAPs track, so there is no active
   direct-network surface.
 
-## Config
+## Configuration Schema Gap
 
-- [ ] User-editable settings are represented in `config.schema.json` or the
-  `configSchema` object in `vite.config.ts`.
-- [ ] Secret fields use `x-napplet-secret: true` and have no `default`.
-- [ ] Schema sections use stable `x-napplet-section` names.
+- [ ] Before adding settings, re-read the living
+  [NAP-CONFIG proposal](https://github.com/napplet/naps/pull/14).
+- [ ] Do not treat vite-plugin `configSchema`, `config` manifest tags, or
+  `napplet-config-schema` HTML metadata as interoperable protocol until a
+  canonical document defines their encoding.
+- [ ] If the manifest encoding remains undefined, use only the proposal's
+  documented runtime registration path or flag the gap.
 
 ## Lifecycle
 
@@ -34,6 +39,8 @@ Use this checklist before shipping meaningful changes to a napplet.
 - [ ] User-triggered operations surface shell errors without crashing the app.
 - [ ] The app feature-detects optional NAPs with injected domain property
   presence, such as `window.napplet?.resource`.
+- [ ] Optional features have a usable fallback and are omitted from manifest
+  `requires`; every listed requirement is essential to the app's core task.
 - [ ] Text that should be copyable opts into selection with
   `data-napplet-select` or a deliberate CSS override.
 
@@ -51,7 +58,8 @@ Use this checklist before shipping meaningful changes to a napplet.
 
 - [ ] `pnpm type-check` passes.
 - [ ] `pnpm build` passes.
+- [ ] `pnpm test:guidance` passes.
 - [ ] The build is a single self-contained `index.html` (JS/CSS inlined) with no
   external asset references — required for `iframe.srcdoc` loading.
-- [ ] Manifest-affecting changes are intentional: config schema, requires list,
-  and built artifacts all affect aggregate hash behavior.
+- [ ] Manifest changes are intentional: NIP-5A path tags determine the
+  aggregate; hard `requires` entries are separate NIP-5D manifest tags.

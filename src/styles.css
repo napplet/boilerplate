@@ -17,16 +17,6 @@
   --napplet-text-selection: none;
 }
 
-:root[data-accent="green"] {
-  --accent: #178a52;
-  --accent-strong: #116d40;
-}
-
-:root[data-accent="amber"] {
-  --accent: #b45309;
-  --accent-strong: #92400e;
-}
-
 * {
   box-sizing: border-box;
 }

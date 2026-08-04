@@ -9,14 +9,15 @@ guardrails are met.
 
 ### `@napplet/shim`
 
-Side-effect installer. Import once in the entry point.
+Runtime-side injected global installer. Napplet application code does not import
+this package.
 
 ```ts
-import '@napplet/shim';
+import { installNappletGlobal } from '@napplet/shim';
 ```
 
-It installs `window.napplet`, routes JSON envelope messages from the shell, and
-mounts the NAP namespaces.
+The host runtime uses it to install selected `window.napplet.<domain>` objects
+before napplet scripts run.
 
 ### `@napplet/sdk`
 
@@ -50,8 +51,8 @@ Vite plugin for local development metadata and local manifest/hash workflow.
 import { nip5aManifest } from '@napplet/vite-plugin';
 ```
 
-The plugin injects napplet meta tags, folds config schema and connect origins
-into aggregate hash inputs, and can write a local `.nip5a-manifest.json` when
+The plugin injects napplet meta tags, folds config schema into aggregate hash
+inputs, and can write a local `.nip5a-manifest.json` when
 `VITE_DEV_PRIVKEY_HEX` is set.
 
 Production relay publishing is intentionally outside this boilerplate.

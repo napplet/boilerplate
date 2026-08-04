@@ -2,24 +2,23 @@
 
 ## Bootstrap
 
-Install the shim once, then use SDK helpers.
+The runtime injects `window.napplet` before app code runs. Use SDK helpers in
+napplet code.
 
 ```ts
-import '@napplet/shim';
 import { relay, storage, identity } from '@napplet/sdk';
 ```
 
 SDK methods read `window.napplet` at call time. This lets app modules import SDK
-helpers freely as long as the entry point imports the shim before user actions
-invoke protocol calls.
+helpers freely while preserving runtime-owned injection.
 
 ## Feature Detection
 
-Use shell capability checks for optional surfaces.
+Use injected domain property presence for optional surfaces.
 
 ```ts
-const supportsResource = window.napplet.shell.supports('nap:resource');
-const supportsRelay = window.napplet.shell.supports('relay');
+const supportsResource = Boolean(window.napplet?.resource);
+const supportsRelay = Boolean(window.napplet?.relay);
 ```
 
 Support checks are advisory. A user-triggered call can still fail because the

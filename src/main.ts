@@ -1,4 +1,3 @@
-import '@napplet/shim';
 import {
   CONFIG_DOMAIN,
   IDENTITY_DOMAIN,
@@ -21,9 +20,7 @@ type StatusKind = 'idle' | 'ok' | 'warn' | 'error';
 
 type ShellShape = {
   napplet?: {
-    shell?: {
-      supports?: (capability: string, protocol?: string) => boolean;
-    };
+    [domain: string]: unknown;
   };
 };
 
@@ -63,19 +60,9 @@ function setOutput(value: unknown): void {
     typeof value === 'string' ? value : JSON.stringify(value, null, 2);
 }
 
-function getShellSupports(capability: string, protocol?: string): boolean {
-  const shell = (window as Window & ShellShape).napplet?.shell;
-  try {
-    return Boolean(shell?.supports?.(capability, protocol));
-  } catch {
-    return false;
-  }
-}
-
 function featureStatus(capability: string): 'yes' | 'no' {
-  return getShellSupports(capability) || getShellSupports(`nap:${capability}`)
-    ? 'yes'
-    : 'no';
+  const napplet = (window as Window & ShellShape).napplet;
+  return napplet && capability in napplet ? 'yes' : 'no';
 }
 
 function renderCapabilities(): void {
@@ -254,4 +241,3 @@ renderCapabilities();
 subscribeToIdentityChanges();
 subscribeToConfigChanges();
 setOutput('Napplet ready. Use the actions above to exercise each shell surface.');
-

@@ -26,7 +26,8 @@ framework-light, and centered on the napplet side of the shell boundary.
   direct-network grant model) is currently deferred on the NAPs track, so there
   is no active direct-network surface. Use `resource.bytes()` for read-only
   external bytes.
-- Import `@napplet/shim` once at the app entry point before calling SDK helpers.
+- Do not import `@napplet/shim` from napplet code. The runtime injects
+  `window.napplet`; app code uses `@napplet/sdk` or direct domain properties.
 - Do not invent app-local NAP names, numbers, or JSON envelope domains. Open a
   proposal PR to `napplet/naps` only after the guardrails in
   `docs/new-nap-proposals.md` are satisfied.

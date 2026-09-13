@@ -33,6 +33,17 @@ Use this checklist before shipping meaningful changes to a napplet.
 - [ ] If the manifest encoding remains undefined, use only the proposal's
   documented runtime registration path or flag the gap.
 
+## Layout
+
+- [ ] No napplet name, tagline, eyebrow, masthead, or footer is rendered; the
+  runtime shows the name.
+- [ ] Compact density; the root fills the frame; no page margins or max-width
+  column.
+- [ ] Checked at `200×160`, `320×560`, `900×600`, and a full-screen frame in
+  dark and light runtime themes with no overflow or clipped controls.
+- [ ] A minimum size is declared (with a notice below it) only if the UI truly
+  breaks smaller.
+
 ## Lifecycle
 
 - [ ] Long-lived subscriptions are closed on teardown.

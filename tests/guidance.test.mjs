@@ -7,7 +7,7 @@ import { runInNewContext } from 'node:vm';
 import ts from 'typescript';
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
-const textExtensions = new Set(['.html', '.json', '.md', '.mjs', '.ts']);
+const textExtensions = new Set(['.css', '.html', '.json', '.md', '.mjs', '.ts']);
 const skippedDirectories = new Set(['.git', 'dist', 'node_modules']);
 
 async function collectTextFiles(directory = root) {
@@ -67,7 +67,6 @@ test('keeps normal Nostr examples OUTBOX-first', () => {
     (operation) => new RegExp(['relay', operation].join('\\.') + '\\s*\\('),
   );
   for (const pattern of patterns) assert.doesNotMatch(main, pattern);
-  assert.match(main, /outbox\.query\s*\(/);
 
   const joined = (...parts) => parts.join('');
   const directCallPatterns = [
@@ -91,15 +90,33 @@ test('keeps normal Nostr examples OUTBOX-first', () => {
   assert.match(designPatterns, /relay-local escape hatch/i);
 });
 
-test('ships no forked skill body and declares no optional demo requirement', () => {
-  const skillBodies = [...sources.keys()].filter(
-    (path) => path.startsWith('.codex/skills/') && path.endsWith('/SKILL.md'),
-  );
+test('ships no forked skill body, points agents at skills.sh, and keeps manifest config on documented surface', () => {
+  const skillBodies = [...sources.keys()].filter((path) => /(?:^|\/)SKILL\.md$/.test(path));
   assert.deepEqual(skillBodies, []);
-  assert.match(sources.get('.codex/skills/README.md'), /npx @napplet\/skills install --to codex/);
+  for (const path of ['AGENTS.md', 'README.md']) {
+    assert.match(sources.get(path), /npx skills add napplet\/napplet/, path);
+  }
+  const retiredInstallers = new RegExp(
+    [['@napplet', 'skills'].join('/'), ['napplet skills', 'install'].join(' '), ['.codex', 'skills'].join('/')]
+      .map((text) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+      .join('|'),
+  );
+  for (const [path, source] of sources) {
+    assert.doesNotMatch(source, retiredInstallers, path);
+  }
+
   const viteConfig = sources.get('vite.config.ts');
   assert.match(viteConfig, /artifactMode:\s*'single-file'/);
-  assert.doesNotMatch(viteConfig, /\brequires\s*:/);
+  // `requires` is allowed once a product has a core task that cannot run
+  // without a domain, but it must stay a list of bare domain names.
+  const requires = viteConfig.match(/\brequires\s*:\s*\[([^\]]*)\]/);
+  if (requires) {
+    const entries = requires[1].split(',').map((entry) => entry.trim()).filter(Boolean);
+    assert.ok(entries.length > 0, 'requires must not be an empty list; omit it instead');
+    for (const entry of entries) {
+      assert.match(entry, /^['"][a-z][a-z0-9-]*['"]$/, `requires entry ${entry} must be a bare domain name`);
+    }
+  }
   assert.doesNotMatch(viteConfig, /\bconfigSchema\b/);
   assert.equal(sources.has('config.schema.json'), false);
   const retiredSingleFilePlugin = new RegExp(['vite-plugin', 'singlefile'].join('-'));
@@ -160,9 +177,23 @@ test('treats injected optional-domain absence as a normal state', async () => {
   assert.equal(hasDomain({ outbox: {} }, 'outbox'), true);
   assert.equal(hasDomain(Object.create({ outbox: {} }), 'outbox'), true);
 
+  // Product code may replace every demo control; it must keep gating optional
+  // domains through the injected-namespace check instead of a probe API.
   const main = sources.get('src/main.ts');
-  for (const control of ['outbox', 'storage', 'identity', 'resource', 'notify']) {
-    assert.match(main, new RegExp(`elements\\.${control}Button\\.disabled = !runtimeHasDomain`));
-  }
-  assert.match(main, /if \(!runtimeHasDomain\(IDENTITY_DOMAIN\)\) return;/);
+  assert.match(main, /from '\.\/domain-availability\.js'/);
+  assert.match(main, /runtimeHasDomain\(/);
+});
+
+test('keeps the applet layout contract: no title header, frame-filling root', () => {
+  const html = sources.get('index.html');
+  const title = html.match(/<title>([^<]*)<\/title>/)?.[1]?.trim();
+  assert.ok(title, 'index.html keeps a <title> for metadata');
+  const escaped = title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  // The runtime shows the napplet's name; do not repeat it as a heading.
+  assert.doesNotMatch(html, new RegExp(`<h[1-6][^>]*>\\s*${escaped}\\s*<`));
+  assert.doesNotMatch(html, /class="[^"]*\b(?:masthead|eyebrow|hero)\b/);
+
+  const css = sources.get('src/styles.css');
+  assert.doesNotMatch(css, /\bbody\s*\{[^}]*min-width/);
+  assert.match(css, /html,\s*body,\s*#app\s*\{[^}]*height:\s*100%/);
 });

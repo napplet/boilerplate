@@ -76,8 +76,11 @@ the demo with a core task that genuinely cannot run without that domain.
   patterns.
 - Guidance for handling missing NAP interfaces or numbered wire formats without
   submitting unnecessary protocol PRs.
-- A small pointer for installing the current `@napplet/skills` package instead
-  of forked local skill bodies.
+- An applet-shaped starter layout: no title header (the runtime shows the
+  name), compact density, container-query tiers from a tiny widget to a
+  full-screen pane, and whole-surface runtime theming.
+- A pointer to the current `napplet-*` agent skills (installed with the
+  skills.sh CLI) instead of forked local skill bodies.
 
 ## Authoring Context
 
@@ -93,11 +96,17 @@ Read these before changing protocol-facing behavior:
 The living NIP-5D source is referenced from `docs/nip-5d.md`; this template does
 not treat its local notes as normative protocol text.
 
-For agent-driven work, install the official skills:
+For agent-driven work, install the official `napplet-*` skills with the open
+skills CLI; it detects your coding agents and places the skills where each one
+reads them:
 
 ```bash
-npx @napplet/skills install --to codex
+npx skills add napplet/napplet
 ```
+
+Then ask the agent to use `napplet-make` (end to end) or `napplet-ui` (layout
+only). The skills are non-normative guidance; living NIP-5D and NAP documents
+remain protocol truth.
 
 ## Text Selection
 

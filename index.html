@@ -6,52 +6,51 @@
     <title>My Napplet</title>
   </head>
   <body>
-    <main id="app" class="app-shell">
-      <section class="workspace" aria-labelledby="app-title">
-        <header class="masthead">
-          <div>
-            <p class="eyebrow">NIP-5D napplet</p>
-            <h1 id="app-title">My Napplet</h1>
+    <!--
+      A napplet is an applet framed by a runtime: the runtime already shows this
+      napplet's name, so there is no title header here. The frame is working
+      surface from the first pixel, and the layout adapts to any frame size.
+    -->
+    <main id="app" class="app">
+      <div class="toolbar" role="toolbar" aria-label="Actions">
+        <button id="identityButton" type="button" title="Refresh identity">
+          <span aria-hidden="true">◎</span><span class="label">Identity</span>
+        </button>
+        <button id="storageButton" type="button" title="Save draft">
+          <span aria-hidden="true">▣</span><span class="label">Save</span>
+        </button>
+        <button id="outboxButton" type="button" title="Query outbox">
+          <span aria-hidden="true">⇅</span><span class="label">Query</span>
+        </button>
+        <button id="resourceButton" type="button" title="Load resource">
+          <span aria-hidden="true">⬇</span><span class="label">Resource</span>
+        </button>
+        <button id="notifyButton" type="button" title="Send notification">
+          <span aria-hidden="true">🔔</span><span class="label">Notify</span>
+        </button>
+        <output id="status" class="status status-idle" aria-live="polite">Ready</output>
+      </div>
+
+      <dl id="capabilities" class="domains" aria-label="Injected NAP domains"></dl>
+
+      <div class="workspace">
+        <section class="pane pane-draft" aria-label="Draft">
+          <label class="field">
+            <span class="field-label">Draft note</span>
+            <textarea id="noteInput" rows="3">Hello from my napplet.</textarea>
+          </label>
+          <div class="meta">
+            <span class="meta-key">identity</span>
+            <span id="identityValue" class="mono truncate">not loaded</span>
+            <span class="meta-key">storage</span>
+            <span id="storageValue" class="mono truncate">not saved</span>
           </div>
-          <output id="status" class="status status-idle">Ready</output>
-        </header>
-
-        <section class="panel capability-panel" aria-labelledby="capability-title">
-          <h2 id="capability-title">NAP Domains</h2>
-          <dl id="capabilities" class="capability-grid"></dl>
         </section>
 
-        <section class="panel action-panel" aria-labelledby="actions-title">
-          <h2 id="actions-title">Actions</h2>
-          <div class="button-row">
-            <button id="identityButton" type="button">Refresh identity</button>
-            <button id="storageButton" type="button">Save note</button>
-            <button id="outboxButton" type="button">Query outbox</button>
-            <button id="resourceButton" type="button">Load resource</button>
-            <button id="notifyButton" type="button">Notify</button>
-          </div>
+        <section class="pane pane-output" aria-label="Output">
+          <pre id="output" class="output" data-napplet-select="text">No events yet.</pre>
         </section>
-
-        <section class="panel split-panel" aria-label="Napplet state">
-          <article>
-            <h2>Identity</h2>
-            <p id="identityValue" class="mono muted">not loaded</p>
-          </article>
-          <article>
-            <h2>Storage</h2>
-            <label class="field">
-              <span>Draft note</span>
-              <textarea id="noteInput" rows="4">Hello from my napplet.</textarea>
-            </label>
-            <p id="storageValue" class="mono muted">not saved</p>
-          </article>
-        </section>
-
-        <section class="panel output-panel" aria-labelledby="events-title">
-          <h2 id="events-title">Output</h2>
-          <pre id="output" class="output" aria-live="polite">No events yet.</pre>
-        </section>
-      </section>
+      </div>
     </main>
     <script type="module" src="/src/main.ts"></script>
   </body>

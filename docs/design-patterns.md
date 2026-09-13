@@ -46,6 +46,22 @@ use vite-plugin `configSchema`; do not treat its private `config` tag or
 `napplet-config-schema` meta as interoperable protocol. Recheck the living
 proposal before adding settings.
 
+## Applet Layout
+
+A napplet is framed by a runtime that already shows its name, so the starter
+renders no title header, tagline, or masthead. The layout is compact and fills
+the frame at any size: `#app` is a `container-type: inline-size` grid, the
+toolbar goes icon-only below 240px, the draft and output panes sit side by side
+from 480px, and the wide tier (≥ 900px) gives the editor and output more room
+instead of centering a column. Short frames hide the informational domain
+strip. The runtime theme repaints `--bg`, `--fg`, and `--primary`, and every
+other token derives from them, so `html`, `body`, and `#app` always match the
+host in dark and light themes.
+
+Keep those properties when replacing the demo. Add a minimum size (with a
+short notice below it) only when the product genuinely cannot work smaller.
+The `napplet-ui` skill carries the full contract and the four-frame check.
+
 ## Text Selection
 
 The starter treats the napplet surface like app chrome: static text does not

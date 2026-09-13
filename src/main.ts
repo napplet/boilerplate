@@ -4,13 +4,17 @@ import {
   OUTBOX_DOMAIN,
   RESOURCE_DOMAIN,
   STORAGE_DOMAIN,
+  THEME_DOMAIN,
   identity,
   notify,
   outbox,
   resource,
   storage,
+  themeGet,
+  themeOnChanged,
   type NostrEvent,
   type Subscription,
+  type Theme,
 } from '@napplet/sdk';
 import { runtimeHasDomain } from './domain-availability.js';
 import './styles.css';
@@ -32,6 +36,7 @@ const elements = {
 };
 
 let identitySubscription: Subscription | null = null;
+let themeSubscription: Subscription | null = null;
 
 function requireElement<T extends HTMLElement>(selector: string): T {
   const element = document.querySelector<T>(selector);
@@ -65,13 +70,17 @@ function renderCapabilities(): void {
   ];
 
   elements.capabilities.replaceChildren(
-    ...rows.flatMap(([label, value]) => {
+    ...rows.map(([label, value]) => {
+      const pill = document.createElement('div');
+      pill.className = 'domain';
+      pill.dataset.state = value === 'no' ? 'off' : 'on';
       const term = document.createElement('dt');
       term.textContent = label;
       const description = document.createElement('dd');
-      description.textContent = value;
-      description.dataset.state = value === 'no' ? 'off' : 'on';
-      return [term, description];
+      description.textContent = value === 'no' ? '–' : '✓';
+      description.setAttribute('aria-label', value === 'no' ? 'absent' : 'injected');
+      pill.append(term, description);
+      return pill;
     }),
   );
 
@@ -180,6 +189,29 @@ async function sendNotification(): Promise<void> {
   setStatus('ok', 'Notification sent');
 }
 
+/**
+ * NAP-THEME covers the whole surface: background and text land on html/body/#app
+ * through the CSS custom properties, and every derived token (surface, border,
+ * muted) follows. The stylesheet's fallback palette applies when the runtime
+ * did not inject `theme`.
+ */
+function applyTheme(theme: Theme): void {
+  const root = document.documentElement.style;
+  root.setProperty('--bg', theme.colors.background);
+  root.setProperty('--fg', theme.colors.text);
+  root.setProperty('--primary', theme.colors.primary);
+}
+
+function subscribeToTheme(): void {
+  if (!runtimeHasDomain(THEME_DOMAIN)) return;
+  try {
+    themeGet().then(applyTheme).catch(() => undefined);
+    themeSubscription = themeOnChanged(applyTheme);
+  } catch (error) {
+    setOutput(error instanceof Error ? error.message : error);
+  }
+}
+
 function subscribeToIdentityChanges(): void {
   if (!runtimeHasDomain(IDENTITY_DOMAIN)) return;
   try {
@@ -229,8 +261,10 @@ elements.notifyButton.addEventListener('click', () => {
 
 window.addEventListener('beforeunload', () => {
   identitySubscription?.close();
+  themeSubscription?.close();
 });
 
 renderCapabilities();
+subscribeToTheme();
 subscribeToIdentityChanges();
 setOutput('Napplet ready. Unavailable optional-domain actions are disabled.');

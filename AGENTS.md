@@ -5,8 +5,9 @@ framework-light, and centered on the napplet side of the shell boundary.
 
 ## Before Editing
 
-1. Read `.codex/skills/README.md` and install the current `@napplet/skills`
-   package for agent-driven napplet work.
+1. Install the current `napplet-*` agent skills with the skills.sh CLI
+   (`npx skills add napplet/napplet`) and follow `napplet-make` for
+   agent-driven napplet work. This template vendors no skill bodies.
 2. Read `docs/context-map.md`.
 3. Read the boundary document for the surface you are changing:
    - `docs/boundaries.md`
@@ -38,6 +39,23 @@ framework-light, and centered on the napplet side of the shell boundary.
 - Do not invent app-local NAP names, numbers, or JSON envelope domains. Open a
   proposal PR to `napplet/naps` only after the guardrails in
   `docs/new-nap-proposals.md` are satisfied.
+
+## Applet, Not Web Page
+
+- Do not render the napplet's name, a tagline, an eyebrow, a masthead, or a
+  footer. The runtime shows the name; the frame is working surface from the
+  first pixel.
+- Keep the compact defaults in `src/styles.css` (13px type, 4/8/12px spacing,
+  28px controls, no page margins, no max-width column) unless the product has a
+  written reason to change them.
+- The napplet can be placed at any size and resized live. Keep the tiered
+  layout (`tiny` < 240px, `compact`, `regular` ≥ 480px, `wide` ≥ 900px, short
+  frames) working; check `200×160`, `320×560`, `900×600`, and a full-screen
+  frame in both dark and light runtime themes.
+- Declare a minimum size (and render a short notice below it) only when the
+  UI genuinely cannot work smaller. The starter has no floor.
+- Apply the runtime theme to the whole surface (`html`, `body`, `#app`, and
+  every derived token), as `applyTheme` in `src/main.ts` does.
 
 ## Verification
 

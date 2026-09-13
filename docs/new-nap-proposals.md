@@ -10,15 +10,17 @@ NAP surface, keep the behavior app-local, or open a proposal PR to
 ## Decision Path
 
 1. **Check existing NAPs first.** Read `docs/package-surfaces.md`, the relevant
-   package README, and current `napplet/naps` specs. Prefer existing relay,
-   storage, inc, keys, theme, media, notify, identity, config, resource, intent,
-   ble, webrtc, link, lists, common, serial, and dm surfaces.
+   package README, and current `napplet/naps` specs. Current package domains are
+   relay, identity, storage, inc, theme, keys, media, notify, config, resource,
+   cvm, outbox, upload, intent, ble, webrtc, link, count, lists, serial, common,
+   and dm. Prefer the highest-level domain that owns the intent.
 2. **Classify the need.** If it is only UI state, app business logic, a local
    helper, or one app's private convention, keep it in app code. It is not a NAP.
 3. **Try composition.** Combine existing NAPs before adding a new one. Examples:
    use `config` for user-editable settings, `storage` for durable app state,
-   `resource` for read-only external bytes, and `inc` for inter-napplet events
-   that do not need a new shell-owned service.
+   `resource` for read-only external bytes, `outbox` for normal social reads and
+   publishes, and `inc` for inter-napplet events that do not need a new
+   shell-mediated protocol.
 4. **Prototype without wire authority.** If a shape is uncertain, write a local
    adapter or exploratory doc. Do not assign a NAP name, number, or shell
    conformance language yet.
@@ -49,7 +51,7 @@ Do not submit a new wire format for:
 - App-local UI events.
 - Convenience wrappers over existing SDK calls.
 - Payloads that can stay inside relay events, storage records, or config values.
-- One-off integrations with a single service or shell.
+- One-off integrations with a single endpoint or shell.
 - Experiments whose lifecycle, security boundary, or implementer audience is
   still unclear.
 - A desire for nicer naming when an existing NAP already owns the semantics.
@@ -65,7 +67,7 @@ A useful PR to `napplet/naps` should include:
 - Why existing NAPs are insufficient.
 - Named interface or numbered wire-format identifier being proposed.
 - Napplet-to-shell and shell-to-napplet message shapes, if wire is required.
-- Capability advertisement strings and fallback behavior.
+- Domain operations, payload compatibility, and fallback behavior.
 - Security, privacy, and consent model.
 - Lifecycle rules: startup, teardown, retries, idempotency, and error handling.
 - Compatibility notes for shells that do not implement it.
@@ -76,7 +78,9 @@ contract over a broad bundle of loosely related messages.
 
 ## Boilerplate Rule
 
-This boilerplate may document a potential future NAP, but it must not ship
-runtime code that depends on an unaccepted NAP. Until the upstream PR lands and
-published `@napplet` packages expose the surface, keep experiments behind local
-adapters and avoid naming them as supported protocol features.
+This boilerplate may use a living proposed NAP when its canonical proposal
+defines the surface and published `@napplet` packages expose it; cite the open
+proposal instead of implying final acceptance. It must not ship runtime code
+that depends on invented, withdrawn, or deferred surface. Until both a living
+proposal and package support exist, keep experiments behind local adapters and
+avoid naming them as supported protocol features.

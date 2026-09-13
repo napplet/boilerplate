@@ -1,28 +1,21 @@
 import {
-  CONFIG_DOMAIN,
   IDENTITY_DOMAIN,
   NOTIFY_DOMAIN,
-  RELAY_DOMAIN,
+  OUTBOX_DOMAIN,
   RESOURCE_DOMAIN,
   STORAGE_DOMAIN,
-  config,
   identity,
   notify,
-  relay,
+  outbox,
   resource,
   storage,
   type NostrEvent,
   type Subscription,
 } from '@napplet/sdk';
+import { runtimeHasDomain } from './domain-availability.js';
 import './styles.css';
 
 type StatusKind = 'idle' | 'ok' | 'warn' | 'error';
-
-type ShellShape = {
-  napplet?: {
-    [domain: string]: unknown;
-  };
-};
 
 const elements = {
   status: requireElement<HTMLOutputElement>('#status'),
@@ -33,14 +26,12 @@ const elements = {
   output: requireElement<HTMLPreElement>('#output'),
   identityButton: requireElement<HTMLButtonElement>('#identityButton'),
   storageButton: requireElement<HTMLButtonElement>('#storageButton'),
-  relayButton: requireElement<HTMLButtonElement>('#relayButton'),
+  outboxButton: requireElement<HTMLButtonElement>('#outboxButton'),
   resourceButton: requireElement<HTMLButtonElement>('#resourceButton'),
   notifyButton: requireElement<HTMLButtonElement>('#notifyButton'),
-  settingsButton: requireElement<HTMLButtonElement>('#settingsButton'),
 };
 
 let identitySubscription: Subscription | null = null;
-let configSubscription: Subscription | null = null;
 
 function requireElement<T extends HTMLElement>(selector: string): T {
   const element = document.querySelector<T>(selector);
@@ -60,19 +51,17 @@ function setOutput(value: unknown): void {
     typeof value === 'string' ? value : JSON.stringify(value, null, 2);
 }
 
-function featureStatus(capability: string): 'yes' | 'no' {
-  const napplet = (window as Window & ShellShape).napplet;
-  return napplet && capability in napplet ? 'yes' : 'no';
+function domainStatus(domain: string): 'yes' | 'no' {
+  return runtimeHasDomain(domain) ? 'yes' : 'no';
 }
 
 function renderCapabilities(): void {
   const rows = [
-    ['relay', featureStatus(RELAY_DOMAIN)],
-    ['storage', featureStatus(STORAGE_DOMAIN)],
-    ['identity', featureStatus(IDENTITY_DOMAIN)],
-    ['config', featureStatus(CONFIG_DOMAIN)],
-    ['resource', featureStatus(RESOURCE_DOMAIN)],
-    ['notify', featureStatus(NOTIFY_DOMAIN)],
+    ['outbox', domainStatus(OUTBOX_DOMAIN)],
+    ['storage', domainStatus(STORAGE_DOMAIN)],
+    ['identity', domainStatus(IDENTITY_DOMAIN)],
+    ['resource', domainStatus(RESOURCE_DOMAIN)],
+    ['notify', domainStatus(NOTIFY_DOMAIN)],
   ];
 
   elements.capabilities.replaceChildren(
@@ -85,6 +74,12 @@ function renderCapabilities(): void {
       return [term, description];
     }),
   );
+
+  elements.outboxButton.disabled = !runtimeHasDomain(OUTBOX_DOMAIN);
+  elements.storageButton.disabled = !runtimeHasDomain(STORAGE_DOMAIN);
+  elements.identityButton.disabled = !runtimeHasDomain(IDENTITY_DOMAIN);
+  elements.resourceButton.disabled = !runtimeHasDomain(RESOURCE_DOMAIN);
+  elements.notifyButton.disabled = !runtimeHasDomain(NOTIFY_DOMAIN);
 }
 
 async function withTimeout<T>(
@@ -142,18 +137,22 @@ async function saveNote(): Promise<void> {
   setStatus('ok', 'Note saved');
 }
 
-async function queryRelay(): Promise<void> {
-  setStatus('idle', 'Querying relay');
-  const values = await readConfigValues();
-  const configuredLimit = Number(values.defaultRelayLimit ?? 5);
-  const limit = Number.isFinite(configuredLimit) ? configuredLimit : 5;
-  const events = await withTimeout(
-    relay.query({ kinds: [1], limit }),
-    'relay.query',
+async function queryOutbox(): Promise<void> {
+  setStatus('idle', 'Querying outbox');
+  const limit = 5;
+  const result = await withTimeout(
+    outbox.query([{ kinds: [1], limit }], { limit, timeoutMs: 8000 }),
+    'outbox.query',
     8000,
   );
-  setOutput(events.map(summarizeEvent));
-  setStatus('ok', `Loaded ${events.length} relay event${events.length === 1 ? '' : 's'}`);
+  if (result.error && result.events.length === 0) throw new Error(result.error);
+  setOutput(result.events.map((eventResult) => summarizeEvent(eventResult.event)));
+  const message = `Loaded ${result.events.length} event${result.events.length === 1 ? '' : 's'}`;
+  const partial = result.incomplete || Boolean(result.error);
+  setStatus(
+    partial ? 'warn' : 'ok',
+    partial ? `${message} (partial${result.error ? `: ${result.error}` : ''})` : message,
+  );
 }
 
 async function loadResource(): Promise<void> {
@@ -181,15 +180,8 @@ async function sendNotification(): Promise<void> {
   setStatus('ok', 'Notification sent');
 }
 
-async function readConfigValues(): Promise<Record<string, unknown>> {
-  try {
-    return await withTimeout(config.get(), 'config.get', 3000);
-  } catch {
-    return {};
-  }
-}
-
 function subscribeToIdentityChanges(): void {
+  if (!runtimeHasDomain(IDENTITY_DOMAIN)) return;
   try {
     identitySubscription = identity.onChanged((pubkey) => {
       elements.identityValue.textContent = shortPubkey(pubkey);
@@ -200,16 +192,6 @@ function subscribeToIdentityChanges(): void {
   }
 }
 
-function subscribeToConfigChanges(): void {
-  try {
-    configSubscription = config.subscribe((values) => {
-      document.documentElement.dataset.accent = String(values.accentColor ?? 'blue');
-    });
-  } catch {
-    document.documentElement.dataset.accent = 'blue';
-  }
-}
-
 function handleAction(action: () => Promise<void>): void {
   action().catch((error: unknown) => {
     setStatus('error', 'Action failed');
@@ -217,27 +199,38 @@ function handleAction(action: () => Promise<void>): void {
   });
 }
 
-elements.identityButton.addEventListener('click', () => handleAction(refreshIdentity));
-elements.storageButton.addEventListener('click', () => handleAction(saveNote));
-elements.relayButton.addEventListener('click', () => handleAction(queryRelay));
-elements.resourceButton.addEventListener('click', () => handleAction(loadResource));
-elements.notifyButton.addEventListener('click', () => handleAction(sendNotification));
-elements.settingsButton.addEventListener('click', () => {
-  try {
-    config.openSettings({ section: 'appearance' });
-    setStatus('ok', 'Settings requested');
-  } catch (error) {
-    setStatus('error', 'Settings failed');
-    setOutput(error instanceof Error ? error.message : error);
+function handleOptionalAction(
+  domain: string,
+  label: string,
+  action: () => Promise<void>,
+): void {
+  if (!runtimeHasDomain(domain)) {
+    setStatus('warn', `${label} unavailable in this runtime`);
+    return;
   }
+  handleAction(action);
+}
+
+elements.identityButton.addEventListener('click', () => {
+  handleOptionalAction(IDENTITY_DOMAIN, 'Identity', refreshIdentity);
+});
+elements.storageButton.addEventListener('click', () => {
+  handleOptionalAction(STORAGE_DOMAIN, 'Storage', saveNote);
+});
+elements.outboxButton.addEventListener('click', () => {
+  handleOptionalAction(OUTBOX_DOMAIN, 'Outbox', queryOutbox);
+});
+elements.resourceButton.addEventListener('click', () => {
+  handleOptionalAction(RESOURCE_DOMAIN, 'Resource loading', loadResource);
+});
+elements.notifyButton.addEventListener('click', () => {
+  handleOptionalAction(NOTIFY_DOMAIN, 'Notifications', sendNotification);
 });
 
 window.addEventListener('beforeunload', () => {
   identitySubscription?.close();
-  configSubscription?.close();
 });
 
 renderCapabilities();
 subscribeToIdentityChanges();
-subscribeToConfigChanges();
-setOutput('Napplet ready. Use the actions above to exercise each shell surface.');
+setOutput('Napplet ready. Unavailable optional-domain actions are disabled.');

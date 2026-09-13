@@ -5,14 +5,16 @@ framework-light, and centered on the napplet side of the shell boundary.
 
 ## Before Editing
 
-1. Read `docs/context-map.md`.
-2. Read the boundary document for the surface you are changing:
+1. Read `.codex/skills/README.md` and install the current `@napplet/skills`
+   package for agent-driven napplet work.
+2. Read `docs/context-map.md`.
+3. Read the boundary document for the surface you are changing:
    - `docs/boundaries.md`
    - `docs/design-patterns.md`
    - `docs/package-surfaces.md`
-3. If changing protocol assumptions, verify against the pinned NIP-5D reference
+4. If changing protocol assumptions, verify against the living NIP-5D reference
    in `docs/nip-5d.md`.
-4. If the change appears to need a new NAP name, message domain, or numbered
+5. If the change appears to need a new NAP name, message domain, or numbered
    wire format, read `docs/new-nap-proposals.md` before writing code.
 
 ## Hard Boundaries
@@ -26,8 +28,13 @@ framework-light, and centered on the napplet side of the shell boundary.
   direct-network grant model) is currently deferred on the NAPs track, so there
   is no active direct-network surface. Use `resource.bytes()` for read-only
   external bytes.
-- Do not import `@napplet/shim` from napplet code. The runtime injects
-  `window.napplet`; app code uses `@napplet/sdk` or direct domain properties.
+- Do not import `@napplet/shim` from napplet code. The shell/runtime injects
+  `window.napplet`; app calls use `@napplet/sdk`, while direct domain properties
+  are only optional-domain availability checks.
+- Use OUTBOX for normal Nostr reads and publishes. Use RELAY only when a feature
+  names an explicit relay-local escape hatch.
+- Add a domain to manifest `requires` only when the napplet cannot perform its
+  core task without it. Guard optional domains and provide a graceful fallback.
 - Do not invent app-local NAP names, numbers, or JSON envelope domains. Open a
   proposal PR to `napplet/naps` only after the guardrails in
   `docs/new-nap-proposals.md` are satisfied.
@@ -39,13 +46,15 @@ Run these before claiming completion:
 ```bash
 pnpm type-check
 pnpm build
+pnpm test:guidance
 pnpm test:conformance
 ```
 
-`test:conformance` loads the built napplet in a real `allow-scripts` iframe and
-fails on a malformed envelope, a manifest problem, a boot failure, or a
-forbidden-global reference. Use `pnpm test:conformance:ui` for the live runtime.
+`test:conformance` loads the built napplet in a real `allow-scripts` iframe.
+Read its report: manifest, wire, and lifecycle checks skip when their evidence
+is not supplied. Use `pnpm test:conformance:ui` for the live runtime.
 
 Use `pnpm dev` for shell/manual testing. A passing browser smoke test should
-cover iframe load, shell capability display, and at least one user-triggered SDK
-operation in the target shell.
+cover iframe load, injected-domain display, and at least one user-triggered SDK
+operation in the target shell. Also verify that missing optional domains disable
+only their enhancements without crashing the napplet.

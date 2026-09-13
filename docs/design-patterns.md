@@ -6,7 +6,7 @@ The runtime injects `window.napplet` before app code runs. Use SDK helpers in
 napplet code.
 
 ```ts
-import { relay, storage, identity } from '@napplet/sdk';
+import { outbox, storage, identity } from '@napplet/sdk';
 ```
 
 SDK methods read `window.napplet` at call time. This lets app modules import SDK
@@ -18,7 +18,7 @@ Use injected domain property presence for optional surfaces.
 
 ```ts
 const supportsResource = Boolean(window.napplet?.resource);
-const supportsRelay = Boolean(window.napplet?.relay);
+const supportsOutbox = Boolean(window.napplet?.outbox);
 ```
 
 Support checks are advisory. A user-triggered call can still fail because the
@@ -37,19 +37,14 @@ const value = await storage.getItem('draft');
 Storage is scoped by napplet identity and aggregate hash on the shell side.
 Do not add browser storage fallbacks without a deliberate privacy review.
 
-## Config
+## Configuration Schema Gap
 
-Prefer manifest-declared config through `@napplet/vite-plugin`.
-
-```ts
-nip5aManifest({
-  nappletType: 'my-napplet',
-  configSchema,
-});
-```
-
-Use `config.get()` for a one-time snapshot, `config.subscribe()` for live values,
-and `config.openSettings()` to deep-link into shell-owned settings UI.
+The living [NAP-CONFIG proposal](https://github.com/napplet/naps/pull/14)
+defines runtime `config.registerSchema`, but it does not currently define a
+manifest tag or HTML-meta encoding for build-time schemas. This starter does not
+use vite-plugin `configSchema`; do not treat its private `config` tag or
+`napplet-config-schema` meta as interoperable protocol. Recheck the living
+proposal before adding settings.
 
 ## Text Selection
 
@@ -73,17 +68,37 @@ For a text-heavy napplet, set the root variable instead:
 }
 ```
 
-## Relay
+## OUTBOX-First Nostr Access
 
-Relay calls go through the shell.
+Use OUTBOX for normal social event reads and publishes so the runtime owns relay
+discovery, fallback, deduplication, signing, and fanout.
 
 ```ts
-const events = await relay.query({ kinds: [1], limit: 5 });
-const sub = relay.subscribe({ kinds: [1] }, onEvent, onEose);
+const { events } = await outbox.query([{ kinds: [1], limit: 5 }]);
+const sub = outbox.subscribe([{ kinds: [1], limit: 20 }]);
+sub.on('event', (result) => renderEvent(result.event));
 sub.close();
 ```
 
 Keep subscriptions tied to UI lifecycle and close them on teardown.
+
+## Relay-Local Escape Hatch
+
+Use RELAY only when the feature needs semantics tied to one named relay, such as
+a NIP-29 group relay, raw relay diagnostics, or protocol tooling OUTBOX cannot
+express. Document that reason next to the call.
+
+```ts
+import { relay } from '@napplet/sdk';
+
+const sub = relay.subscribe(
+  [{ kinds: [9, 10, 11, 12], limit: 50 }],
+  (result) => renderGroupEvent(result.event),
+  () => markCaughtUp(),
+  { relay: 'wss://groups.example.com' },
+);
+sub.close();
+```
 
 ## Resource Fetching
 
@@ -99,14 +114,13 @@ done using it.
 
 ## Deferred NAPs (direct network access, security class)
 
-NAP-CONNECT (direct-network grants: `connectGranted()` / `connectOrigins()`) and
-NAP-CLASS (shell-assigned posture: `getClass()`) are currently **deferred** on
-the [NAPs track](https://github.com/napplet/naps). They are not part of the
-active surface: the `connect`/`class` domains, their SDK helpers, and the
-vite-plugin `connect` option have been removed. Do not depend on them. For
-read-only external bytes, use `resource.bytes()`. If your napplet genuinely needs
-a capability the active NAPs do not cover, propose it on the track first (see
-below) rather than reaching for removed surface.
+NAP-CONNECT direct-network grants and NAP-CLASS shell-assigned security posture
+are currently **deferred** on the [NAPs track](https://github.com/napplet/naps).
+They are not part of the active surface: the `connect`/`class` domains, their
+SDK helpers, and the vite-plugin `connect` option have been removed. Do not
+depend on them. For read-only external bytes, use `resource.bytes()`. If your
+napplet genuinely needs a capability the active NAPs do not cover, propose it on
+the track first (see below) rather than reaching for removed surface.
 
 ## Missing Protocol Surface
 

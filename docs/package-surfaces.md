@@ -50,11 +50,8 @@ Vite plugin for single-file builds and a local napplet manifest/hash workflow.
 import { nip5aManifest } from '@napplet/vite-plugin';
 ```
 
-Set `artifactMode: 'single-file'` for the NIP-5D artifact shape. The plugin can
-write a local kind `35129` manifest JSON file when `VITE_DEV_PRIVKEY_HEX` is set;
-the NIP-5A aggregate covers path tags, while `requires` is a separate NIP-5D
-manifest tag. Declare only hard domains through the explicit `requires` option
-and keep inference disabled for optional features. Config-schema metadata is
-private package plumbing until a living protocol document defines that encoding.
+Set `artifactMode: 'single-file'` for the NIP-5D artifact shape. Current manifests use the artifact-hash schema defined by the living [NIP-5D](https://github.com/nostr-protocol/nips/pull/2303), rather than a NIP-5A aggregate. The starter's maintained plugin emits this schema. Declare hard domains through explicit `requires` and optional enhancements through a compatible plugin's `optional` option. Production publishing is outside this starter.
 
-Production relay publishing is intentionally outside this boilerplate.
+## Optional GAMEPAD
+
+A GAMEPAD-capable SDK release exports `gamepad` from `@napplet/sdk` and `@napplet/sdk/gamepad`; a GAMEPAD-capable NAP package also exports `@napplet/nap/gamepad` and its `types`, `shim`, and `sdk` subpaths. The SDK range accepts the current base release and the GAMEPAD release; importing GAMEPAD requires the latter. See [Controller input](gamepad.md) and the living [NAP-GAMEPAD proposal](https://github.com/napplet/naps/pull/108).

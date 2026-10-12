@@ -197,3 +197,15 @@ test('keeps the applet layout contract: no title header, frame-filling root', ()
   assert.doesNotMatch(css, /\bbody\s*\{[^}]*min-width/);
   assert.match(css, /html,\s*body,\s*#app\s*\{[^}]*height:\s*100%/);
 });
+
+
+test('controller presence remains optional and its guide links the living proposal', () => {
+  const source = sources.get('src/domain-availability.ts');
+  const compiled = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS } }).outputText;
+  const context = { exports: {} };
+  runInNewContext(compiled, context);
+  assert.equal(context.exports.hasDomain(undefined, 'gamepad'), false);
+  assert.equal(context.exports.hasDomain({ gamepad: {} }, 'gamepad'), true);
+  assert.match(sources.get('docs/gamepad.md'), /https:\/\/github\.com\/napplet\/naps\/pull\/108/);
+  assert.match(sources.get('docs/gamepad.md'), /keyboard and pointer/);
+});

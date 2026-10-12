@@ -67,6 +67,7 @@ function renderCapabilities(): void {
     ['identity', domainStatus(IDENTITY_DOMAIN)],
     ['resource', domainStatus(RESOURCE_DOMAIN)],
     ['notify', domainStatus(NOTIFY_DOMAIN)],
+    ['gamepad', domainStatus('gamepad')],
   ];
 
   elements.capabilities.replaceChildren(

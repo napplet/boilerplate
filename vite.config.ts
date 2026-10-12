@@ -9,9 +9,10 @@ export default defineConfig({
   },
   plugins: [
     // Produce one self-contained `/index.html` for NIP-5D `srcdoc` loading,
-    // then content-address it with the NIP-5A tag/hash schema.
+    // Content-address it using the current NIP-5D artifact-hash schema.
     nip5aManifest({
       nappletType: 'my-napplet',
+      description: 'A compact starter with optional runtime actions.',
       artifactMode: 'single-file',
     }),
   ],

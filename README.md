@@ -22,7 +22,7 @@ pnpm verify
 
 `pnpm build` uses `@napplet/vite-plugin` to produce one inlined `index.html` and,
 when `VITE_DEV_PRIVKEY_HEX` is set, write a local napplet manifest JSON file for
-hash workflow testing. That file uses NIP-5D kinds with the NIP-5A tag schema.
+hash workflow testing. Manifest output follows the current [NIP-5D Manifest section](https://github.com/nostr-protocol/nips/pull/2303); the helper name remains a package compatibility alias.
 
 ## Conformance Testing
 
@@ -55,9 +55,7 @@ Exacting requirements for a passing build:
   `window.napplet?.domain` checks and a graceful fallback.
 - Do not reference `window.nostr` or use direct `fetch`/`WebSocket`/`localStorage`.
 
-The executable `index.html` does **not** carry its own aggregate hash. Before
-execution, the runtime verifies manifest path blobs and recomputes the NIP-5A
-aggregate carried by the manifest `x` tag.
+The current [NIP-5D Manifest section](https://github.com/nostr-protocol/nips/pull/2303) defines the artifact hash and verification behavior. The CLI records those exact `index.html` bytes; this guide does not define an alternative identity or hash scheme.
 
 This generic starter declares no hard domains. Each demo action is optional and
 disabled when its injected domain is absent. Add `requires` only after replacing
@@ -126,3 +124,7 @@ pnpm verify       # guidance test + type-check + build
 pnpm test:conformance     # headless NAP conformance (build + check, CI exit code)
 pnpm test:conformance:ui  # live conformance web runtime, re-runs on change
 ```
+
+## Gameplay previews
+
+Use the standalone CLI to record an optional silent gameplay clip from `dist/`, review it, and include it with `napplet deploy --zapstore`. See [the capture guide](docs/gameplay-previews.md) for interactive recording, headless recipes, stale-build checks, and static covers.

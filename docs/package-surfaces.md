@@ -52,8 +52,7 @@ import { nip5aManifest } from '@napplet/vite-plugin';
 
 Set `artifactMode: 'single-file'` for the NIP-5D artifact shape. The plugin can
 write a local kind `35129` manifest JSON file when `VITE_DEV_PRIVKEY_HEX` is set;
-the NIP-5A aggregate covers path tags, while `requires` is a separate NIP-5D
-manifest tag. Declare only hard domains through the explicit `requires` option
+the current [NIP-5D Manifest section](https://github.com/nostr-protocol/nips/pull/2303) governs artifact identity and capability tags. The `requires` plugin option selects required domains; it is not a literal current manifest tag. Declare only hard domains through this option
 and keep inference disabled for optional features. Config-schema metadata is
 private package plumbing until a living protocol document defines that encoding.
 

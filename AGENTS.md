@@ -34,7 +34,7 @@ framework-light, and centered on the napplet side of the shell boundary.
   are only optional-domain availability checks.
 - Use OUTBOX for normal Nostr reads and publishes. Use RELAY only when a feature
   names an explicit relay-local escape hatch.
-- Add a domain to manifest `requires` only when the napplet cannot perform its
+- Add a domain to the plugin `requires` option only when the napplet cannot perform its
   core task without it. Guard optional domains and provide a graceful fallback.
 - Do not invent app-local NAP names, numbers, or JSON envelope domains. Open a
   proposal PR to `napplet/naps` only after the guardrails in

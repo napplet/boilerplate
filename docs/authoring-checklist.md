@@ -50,8 +50,8 @@ Use this checklist before shipping meaningful changes to a napplet.
 - [ ] User-triggered operations surface shell errors without crashing the app.
 - [ ] The app feature-detects optional NAPs with injected domain property
   presence, such as `window.napplet?.resource`.
-- [ ] Optional features have a usable fallback and are omitted from manifest
-  `requires`; every listed requirement is essential to the app's core task.
+- [ ] Optional features have a usable fallback and are omitted from the plugin
+  `requires` option; every listed requirement is essential to the app's core task.
 - [ ] Text that should be copyable opts into selection with
   `data-napplet-select` or a deliberate CSS override.
 
@@ -72,5 +72,8 @@ Use this checklist before shipping meaningful changes to a napplet.
 - [ ] `pnpm test:guidance` passes.
 - [ ] The build is a single self-contained `index.html` (JS/CSS inlined) with no
   external asset references — required for `iframe.srcdoc` loading.
-- [ ] Manifest changes are intentional: NIP-5A path tags determine the
-  aggregate; hard `requires` entries are separate NIP-5D manifest tags.
+- [ ] Manifest changes match the current [NIP-5D Manifest section](https://github.com/nostr-protocol/nips/pull/2303). Verify the hash of the exact built artifact and the required/optional domain declarations.
+
+## Optional application listing
+
+If publishing gameplay media, follow [the recording guide](gameplay-previews.md). Review the clip from the final build, preserve a static cover, and verify `napplet deploy --zapstore --dry-run --json` before publishing. Re-record or deselect a stale clip after a rebuild.

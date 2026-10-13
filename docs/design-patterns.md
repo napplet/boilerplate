@@ -34,7 +34,7 @@ await storage.setItem('draft', value);
 const value = await storage.getItem('draft');
 ```
 
-Storage is scoped by napplet identity and aggregate hash on the shell side.
+Storage identity and isolation follow the current [NAP-STORAGE specification](https://github.com/napplet/naps); resolve scope on the shell side using that specification.
 Do not add browser storage fallbacks without a deliberate privacy review.
 
 ## Configuration Schema Gap

@@ -1,0 +1,5 @@
+[
+  { "type": "click", "atMs": 100, "x": 100, "y": 100 },
+  { "type": "keyDown", "atMs": 800, "key": "ArrowRight" },
+  { "type": "keyUp", "atMs": 4200, "key": "ArrowRight" }
+]
